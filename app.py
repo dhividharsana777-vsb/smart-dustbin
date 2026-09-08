@@ -5,18 +5,27 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# ==============================
-# LOAD ML MODEL
-# ==============================
 
-model = joblib.load("dustbin_model.pkl")
+# =========================================================
+# LOAD MACHINE LEARNING MODEL
+# =========================================================
+
+try:
+    model = joblib.load("dustbin_model.pkl")
+    print("AI Model loaded successfully.")
+
+except Exception as e:
+    model = None
+    print("Warning: AI model could not be loaded.")
+    print(e)
 
 
-# ==============================
+# =========================================================
 # SMART BIN DATA
-# ==============================
+# =========================================================
 
 bins = [
+
     {
         "id": "BIN-001",
         "location": "Central Park",
@@ -24,6 +33,7 @@ bins = [
         "temperature": 28,
         "weight": 12
     },
+
     {
         "id": "BIN-002",
         "location": "Market Street",
@@ -31,6 +41,7 @@ bins = [
         "temperature": 31,
         "weight": 21
     },
+
     {
         "id": "BIN-003",
         "location": "Main Road",
@@ -38,6 +49,7 @@ bins = [
         "temperature": 32,
         "weight": 29
     },
+
     {
         "id": "BIN-004",
         "location": "Bus Stand",
@@ -45,6 +57,7 @@ bins = [
         "temperature": 30,
         "weight": 18
     },
+
     {
         "id": "BIN-005",
         "location": "School Road",
@@ -52,6 +65,7 @@ bins = [
         "temperature": 27,
         "weight": 10
     },
+
     {
         "id": "BIN-006",
         "location": "Railway Station",
@@ -59,6 +73,7 @@ bins = [
         "temperature": 33,
         "weight": 25
     },
+
     {
         "id": "BIN-007",
         "location": "Hospital Road",
@@ -66,6 +81,7 @@ bins = [
         "temperature": 29,
         "weight": 17
     },
+
     {
         "id": "BIN-008",
         "location": "Lake View",
@@ -73,41 +89,53 @@ bins = [
         "temperature": 28,
         "weight": 13
     }
+
 ]
 
 
-# ==============================
+# =========================================================
 # HOME / DASHBOARD
-# ==============================
+# =========================================================
 
 @app.route("/")
 def home():
+
     return render_template("index.html")
 
 
-# ==============================
+# =========================================================
 # ROUTES PAGE
-# ==============================
+# =========================================================
 
 @app.route("/routes")
 def routes():
+
     return render_template("routes.html")
 
 
-# ==============================
+# =========================================================
 # AI PREDICTION
-# ==============================
+# =========================================================
 
 @app.route("/predict", methods=["POST"])
 def predict():
 
     try:
 
-        data = request.json
+        data = request.get_json()
 
-        fill_level = float(data["fill_level"])
-        temperature = float(data["temperature"])
-        weight = float(data["weight"])
+        fill_level = float(
+            data["fill_level"]
+        )
+
+        temperature = float(
+            data["temperature"]
+        )
+
+        weight = float(
+            data["weight"]
+        )
+
 
         features = [[
             fill_level,
@@ -115,23 +143,66 @@ def predict():
             weight
         ]]
 
-        # ML prediction
-        prediction = model.predict(features)[0]
 
-        # Prediction confidence
-        try:
+        # -----------------------------------------
+        # ML MODEL PREDICTION
+        # -----------------------------------------
 
-            probabilities = model.predict_proba(features)[0]
+        if model is not None:
 
-            confidence = max(probabilities) * 100
+            prediction = model.predict(
+                features
+            )[0]
 
-        except Exception:
+            prediction = str(
+                prediction
+            )
 
-            confidence = 90.0
+            try:
+
+                probabilities = model.predict_proba(
+                    features
+                )[0]
+
+                confidence = max(
+                    probabilities
+                ) * 100
+
+            except Exception:
+
+                confidence = 90.0
+
+        else:
+
+            # Backup rule-based prediction
+            # if model is unavailable
+
+            if fill_level >= 85:
+
+                prediction = "FULL"
+
+                confidence = 95.0
+
+            elif fill_level >= 60:
+
+                prediction = "WARNING"
+
+                confidence = 90.0
+
+            else:
+
+                prediction = "NORMAL"
+
+                confidence = 88.0
+
+
+        # -----------------------------------------
+        # RESPONSE
+        # -----------------------------------------
 
         return jsonify({
 
-            "status": str(prediction),
+            "status": prediction,
 
             "probability": round(
                 confidence,
@@ -146,6 +217,7 @@ def predict():
 
         })
 
+
     except Exception as e:
 
         return jsonify({
@@ -155,18 +227,20 @@ def predict():
         }), 400
 
 
-# ==============================
+# =========================================================
 # GET ALL SMART BINS
-# ==============================
+# =========================================================
 
 @app.route("/api/bins")
 def get_bins():
 
     result = []
 
+
     for b in bins:
 
         fill = b["fill_level"]
+
 
         if fill >= 85:
 
@@ -180,13 +254,14 @@ def get_bins():
 
             status = "NORMAL"
 
+
         result.append({
 
             "id": b["id"],
 
             "location": b["location"],
 
-            "fill_level": fill,
+            "fill_level": b["fill_level"],
 
             "temperature": b["temperature"],
 
@@ -196,37 +271,67 @@ def get_bins():
 
         })
 
+
     return jsonify(result)
 
 
-# ==============================
-# DASHBOARD DATA
-# ==============================
+# =========================================================
+# DASHBOARD API
+# =========================================================
 
 @app.route("/api/dashboard")
 def dashboard():
 
     total_bins = len(bins)
 
+
+    # Bins which need attention
+
     action_bins = sum(
-        1 for b in bins
+
+        1
+
+        for b in bins
+
         if b["fill_level"] >= 60
+
     )
 
+
+    # Average fill
+
     average_fill = (
+
         sum(
             b["fill_level"]
             for b in bins
         )
+
         / total_bins
+
     )
+
+
+    # Highest filled bin
 
     next_bin = max(
+
         bins,
-        key=lambda x: x["fill_level"]
+
+        key=lambda x:
+        x["fill_level"]
+
     )
 
-    fill = next_bin["fill_level"]
+
+    fill = next_bin[
+        "fill_level"
+    ]
+
+
+    # -----------------------------------------
+    # OVERFLOW ESTIMATION
+    # -----------------------------------------
 
     if fill >= 90:
 
@@ -244,16 +349,20 @@ def dashboard():
 
         overflow_hours = 14.0
 
+
     return jsonify({
 
-        "total_bins": total_bins,
+        "total_bins":
+            total_bins,
 
-        "action_bins": action_bins,
+        "action_bins":
+            action_bins,
 
-        "average_fill": round(
-            average_fill,
-            1
-        ),
+        "average_fill":
+            round(
+                average_fill,
+                1
+            ),
 
         "next_overflow_bin":
             next_bin["id"],
@@ -261,25 +370,26 @@ def dashboard():
         "overflow_hours":
             overflow_hours,
 
-        "ai_confidence": 94.2,
-
-        "ai_accuracy": 94.2
+        "ai_confidence":
+            94.2
 
     })
 
 
-# ==============================
+# =========================================================
 # COLLECTION PRIORITY
-# ==============================
+# =========================================================
 
 @app.route("/api/priority")
 def collection_priority():
 
     priority = []
 
+
     for b in bins:
 
         fill = b["fill_level"]
+
 
         if fill >= 85:
 
@@ -293,188 +403,93 @@ def collection_priority():
 
             level = "LOW"
 
+
         priority.append({
 
-            "id": b["id"],
+            "id":
+                b["id"],
 
-            "location": b["location"],
+            "location":
+                b["location"],
 
-            "fill_level": fill,
+            "fill_level":
+                fill,
 
-            "priority": level
+            "priority":
+                level
 
         })
 
+
     # Highest fill first
+
     priority.sort(
-        key=lambda x: x["fill_level"],
+
+        key=lambda x:
+        x["fill_level"],
+
         reverse=True
+
     )
+
 
     return jsonify(priority)
 
 
-# ==============================
-# AI COLLECTION ROUTE
-# ==============================
+# =========================================================
+# REFRESH / SIMULATE SENSOR DATA
+# =========================================================
 
-@app.route("/api/route")
-def generate_route():
-
-    # Sort bins based on urgency
-    route = sorted(
-        bins,
-        key=lambda x: x["fill_level"],
-        reverse=True
-    )
-
-    result = []
-
-    for index, b in enumerate(
-        route,
-        start=1
-    ):
-
-        fill = b["fill_level"]
-
-        # Priority
-        if fill >= 85:
-
-            priority = "HIGH"
-
-        elif fill >= 60:
-
-            priority = "MEDIUM"
-
-        else:
-
-            priority = "LOW"
-
-        result.append({
-
-            "stop": index,
-
-            "id": b["id"],
-
-            "location": b["location"],
-
-            "fill_level": fill,
-
-            "priority": priority,
-
-            "temperature":
-                b["temperature"],
-
-            "weight":
-                b["weight"]
-
-        })
-
-    # Estimate route information
-
-    total_stops = len(result)
-
-    high_priority = sum(
-        1
-        for item in result
-        if item["priority"] == "HIGH"
-    )
-
-    medium_priority = sum(
-        1
-        for item in result
-        if item["priority"] == "MEDIUM"
-    )
-
-    low_priority = sum(
-        1
-        for item in result
-        if item["priority"] == "LOW"
-    )
-
-    # Simulated distance
-    estimated_distance = round(
-        total_stops * 1.8,
-        1
-    )
-
-    # Estimated collection time
-    estimated_time = total_stops * 12
-
-    return jsonify({
-
-        "success": True,
-
-        "route": result,
-
-        "summary": {
-
-            "total_stops":
-                total_stops,
-
-            "high_priority":
-                high_priority,
-
-            "medium_priority":
-                medium_priority,
-
-            "low_priority":
-                low_priority,
-
-            "estimated_distance":
-                estimated_distance,
-
-            "estimated_time":
-                estimated_time
-
-        },
-
-        "generated_at":
-            datetime.now().strftime(
-                "%Y-%m-%d %H:%M:%S"
-            )
-
-    })
-
-
-# ==============================
-# REFRESH SENSOR DATA
-# ==============================
-
-@app.route("/api/refresh", methods=["POST"])
+@app.route(
+    "/api/refresh",
+    methods=["POST"]
+)
 def refresh():
 
     for b in bins:
 
-        # Simulate sensor change
+
+        # Simulate fill level change
 
         change = random.randint(
             -2,
             4
         )
 
+
         b["fill_level"] += change
 
+
         # Keep between 0 and 100
+
         b["fill_level"] = max(
+
             0,
+
             min(
                 100,
                 b["fill_level"]
             )
+
         )
 
-        # Temperature variation
+
+        # Simulate temperature
 
         b["temperature"] += random.uniform(
             -0.5,
             0.5
         )
 
+
         b["temperature"] = round(
+
             b["temperature"],
+
             1
+
         )
+
 
     return jsonify({
 
@@ -491,14 +506,344 @@ def refresh():
     })
 
 
-# ==============================
-# RUN SERVER
-# ==============================
+# =========================================================
+# AUTOMATIC AI ROUTE
+# =========================================================
+
+@app.route("/api/routes/automatic")
+def automatic_route():
+
+
+    # -----------------------------------------
+    # Sort bins by fill level
+    # Highest priority first
+    # -----------------------------------------
+
+    sorted_bins = sorted(
+
+        bins,
+
+        key=lambda x:
+        x["fill_level"],
+
+        reverse=True
+
+    )
+
+
+    route = []
+
+
+    for b in sorted_bins:
+
+        fill = b["fill_level"]
+
+
+        # -----------------------------------------
+        # Determine priority
+        # -----------------------------------------
+
+        if fill >= 85:
+
+            priority = "HIGH"
+
+        elif fill >= 60:
+
+            priority = "MEDIUM"
+
+        else:
+
+            priority = "LOW"
+
+
+        route.append({
+
+            "id":
+                b["id"],
+
+            "location":
+                b["location"],
+
+            "fill_level":
+                fill,
+
+            "priority":
+                priority
+
+        })
+
+
+    # -----------------------------------------
+    # Statistics
+    # -----------------------------------------
+
+    total_stops = len(
+        route
+    )
+
+
+    high_priority = sum(
+
+        1
+
+        for b in route
+
+        if b["priority"] == "HIGH"
+
+    )
+
+
+    # -----------------------------------------
+    # Estimated distance
+    #
+    # Demo calculation:
+    # Each stop = 2.4 km
+    # -----------------------------------------
+
+    distance = round(
+
+        total_stops * 2.4,
+
+        1
+
+    )
+
+
+    # -----------------------------------------
+    # Estimated time
+    #
+    # Each stop = 8 minutes
+    # -----------------------------------------
+
+    time = total_stops * 8
+
+
+    return jsonify({
+
+        "vehicle":
+            "AI AUTO ROUTE",
+
+        "total_stops":
+            total_stops,
+
+        "high_priority":
+            high_priority,
+
+        "distance":
+            distance,
+
+        "time":
+            time,
+
+        "route":
+            route
+
+    })
+
+
+# =========================================================
+# CREATE MANUAL ROUTE
+# =========================================================
+
+@app.route(
+    "/api/routes/create",
+    methods=["POST"]
+)
+def create_route():
+
+
+    try:
+
+        data = request.get_json()
+
+
+        # -----------------------------------------
+        # Vehicle
+        # -----------------------------------------
+
+        vehicle = data.get(
+
+            "vehicle",
+
+            "TRUCK-01"
+
+        )
+
+
+        # -----------------------------------------
+        # Selected bin IDs
+        # -----------------------------------------
+
+        selected_ids = data.get(
+
+            "bins",
+
+            []
+
+        )
+
+
+        selected_bins = []
+
+
+        # -----------------------------------------
+        # Find selected bins
+        # -----------------------------------------
+
+        for b in bins:
+
+            if b["id"] in selected_ids:
+
+
+                fill = b[
+                    "fill_level"
+                ]
+
+
+                if fill >= 85:
+
+                    priority = "HIGH"
+
+                elif fill >= 60:
+
+                    priority = "MEDIUM"
+
+                else:
+
+                    priority = "LOW"
+
+
+                selected_bins.append({
+
+                    "id":
+                        b["id"],
+
+                    "location":
+                        b["location"],
+
+                    "fill_level":
+                        fill,
+
+                    "priority":
+                        priority
+
+                })
+
+
+        # -----------------------------------------
+        # Sort selected bins
+        # -----------------------------------------
+
+        selected_bins.sort(
+
+            key=lambda x:
+            x["fill_level"],
+
+            reverse=True
+
+        )
+
+
+        # -----------------------------------------
+        # Route statistics
+        # -----------------------------------------
+
+        total_stops = len(
+            selected_bins
+        )
+
+
+        high_priority = sum(
+
+            1
+
+            for b in selected_bins
+
+            if b["priority"] == "HIGH"
+
+        )
+
+
+        distance = round(
+
+            total_stops * 2.4,
+
+            1
+
+        )
+
+
+        time = total_stops * 8
+
+
+        return jsonify({
+
+            "vehicle":
+                vehicle,
+
+            "total_stops":
+                total_stops,
+
+            "high_priority":
+                high_priority,
+
+            "distance":
+                distance,
+
+            "time":
+                time,
+
+            "route":
+                selected_bins
+
+        })
+
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error":
+                str(e)
+
+        }), 400
+
+
+# =========================================================
+# HEALTH CHECK
+# =========================================================
+
+@app.route("/health")
+def health():
+
+    return jsonify({
+
+        "status":
+            "online",
+
+        "service":
+            "SmartWaste AI",
+
+        "time":
+            datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
+
+    })
+
+
+# =========================================================
+# RUN APPLICATION
+# =========================================================
 
 if __name__ == "__main__":
 
     app.run(
-        debug=True,
+
         host="0.0.0.0",
-        port=5000
+
+        port=5000,
+
+        debug=True
+
     )
