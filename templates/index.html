@@ -2,790 +2,29 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SmartWaste AI | Smart Waste Management</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SmartWaste AI Dashboard</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
 
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f5f8f6;
-            color: #17211b;
-        }
-
-        button,
-        input,
-        select {
-            font-family: inherit;
-        }
-
-        .app {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* ================= SIDEBAR ================= */
-
-        .sidebar {
-            width: 270px;
-            background: #092b1e;
-            color: white;
-            padding: 28px 20px;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 45px;
-        }
-
-        .logo-icon {
-            width: 55px;
-            height: 55px;
-            border-radius: 16px;
-            background: #caff70;
-            color: #123b26;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .logo h2 {
-            margin: 0;
-            font-size: 22px;
-        }
-
-        .logo span {
-            font-size: 10px;
-            letter-spacing: 2px;
-            color: #a7b8af;
-        }
-
-        nav {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        nav a {
-            color: #c8d5ce;
-            text-decoration: none;
-            padding: 15px 18px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: 0.25s;
-        }
-
-        nav a:hover,
-        nav a.active {
-            background: #20513b;
-            color: white;
-        }
-
-        .system {
-            position: absolute;
-            left: 20px;
-            right: 20px;
-            bottom: 25px;
-            background: #123d2b;
-            padding: 17px;
-            border-radius: 15px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .online-dot {
-            width: 13px;
-            height: 13px;
-            background: #61e69a;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #61e69a;
-        }
-
-        .system b {
-            display: block;
-        }
-
-        .system small {
-            color: #9bb0a4;
-        }
-
-        /* ================= MAIN ================= */
-
-        .main {
-            margin-left: 270px;
-            width: calc(100% - 270px);
-            padding: 35px 45px;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 28px;
-        }
-
-        .small-title {
-            font-size: 12px;
-            letter-spacing: 3px;
-            color: #688176;
-            font-weight: bold;
-        }
-
-        header h1 {
-            margin: 8px 0;
-            font-size: 40px;
-        }
-
-        .subtitle {
-            color: #708078;
-            margin: 0;
-        }
-
-        .header-right {
-            text-align: right;
-        }
-
-        .live {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #e2f9e9;
-            color: #159447;
-            padding: 10px 17px;
-            border-radius: 25px;
-            font-weight: bold;
-        }
-
-        .live span {
-            width: 8px;
-            height: 8px;
-            background: #24ae61;
-            border-radius: 50%;
-        }
-
-        .date {
-            margin-top: 15px;
-            color: #718078;
-        }
-
-        /* ================= STATS ================= */
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 22px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 18px;
-            padding: 24px;
-            box-shadow: 0 7px 25px rgba(0,0,0,0.05);
-        }
-
-        .stat-top {
-            display: flex;
-            justify-content: space-between;
-            color: #718078;
-        }
-
-        .stat-icon {
-            background: #e8f7ed;
-            padding: 10px;
-            border-radius: 12px;
-        }
-
-        .stat-icon.warning {
-            background: #fff0d5;
-        }
-
-        .stat-icon.blue {
-            background: #e3f0ff;
-        }
-
-        .stat-icon.purple {
-            background: #eee4ff;
-        }
-
-        .stat-card h2 {
-            font-size: 34px;
-            margin: 18px 0 8px;
-        }
-
-        .positive {
-            color: #159447;
-        }
-
-        .warning-text {
-            color: #d99112;
-        }
-
-        /* ================= PANELS ================= */
-
-        .panel {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 7px 25px rgba(0,0,0,0.05);
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1.7fr 1fr;
-            gap: 25px;
-        }
-
-        .lower-grid {
-            display: grid;
-            grid-template-columns: 1.7fr 1fr;
-            gap: 25px;
-            margin-top: 25px;
-        }
-
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .panel-header h2 {
-            margin: 0;
-            font-size: 21px;
-        }
-
-        .panel-header p {
-            margin: 7px 0 0;
-            color: #7c8982;
-        }
-
-        .refresh {
-            border: 1px solid #d6ded9;
-            background: white;
-            padding: 10px 16px;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        .refresh:hover {
-            background: #edf7f0;
-        }
-
-        /* ================= BINS ================= */
-
-        .bins {
-            display: grid;
-            gap: 16px;
-        }
-
-        .bin {
-            padding: 17px;
-            border: 1px solid #edf0ee;
-            border-radius: 14px;
-        }
-
-        .bin-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .status {
-            font-size: 11px;
-            font-weight: bold;
-            padding: 6px 12px;
-            border-radius: 20px;
-        }
-
-        .normal-status {
-            background: #e5f8eb;
-            color: #168d48;
-        }
-
-        .warning-status {
-            background: #fff1d7;
-            color: #d18a0c;
-        }
-
-        .full-status {
-            background: #ffe1e1;
-            color: #d33a3a;
-        }
-
-        .progress {
-            height: 9px;
-            background: #edf1ee;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            border-radius: 10px;
-        }
-
-        .normal-bar {
-            background: #46b878;
-        }
-
-        .warning-bar {
-            background: #e8a52e;
-        }
-
-        .full-bar {
-            background: #e24a4a;
-        }
-
-        .bin-info {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            color: #78847e;
-        }
-
-        .bin-info strong {
-            color: #17211b;
-        }
-
-        /* ================= AI ================= */
-
-        .ai-panel {
-            background: #0c3022;
-            color: white;
-        }
-
-        .ai-title {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 25px;
-        }
-
-        .ai-title h2 {
-            margin: 0;
-        }
-
-        .ai-title p {
-            margin: 5px 0;
-            color: #9ab6a8;
-        }
-
-        .robot {
-            width: 50px;
-            height: 50px;
-            background: #20523b;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 25px;
-        }
-
-        .prediction-box {
-            background: #154431;
-            border-radius: 17px;
-            padding: 25px;
-        }
-
-        .prediction-label {
-            font-size: 11px;
-            letter-spacing: 2px;
-            color: #9ab6a8;
-        }
-
-        .prediction-box h2 {
-            font-size: 32px;
-            margin: 20px 0 5px;
-        }
-
-        .prediction-time {
-            font-size: 23px;
-            color: #caff70;
-            font-weight: bold;
-        }
-
-        .prediction-box p {
-            color: #9ab6a8;
-            font-size: 13px;
-        }
-
-        .confidence {
-            margin-top: 25px;
-        }
-
-        .confidence > div:first-child {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .confidence-bar {
-            height: 9px;
-            background: #315542;
-            border-radius: 10px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-
-        .confidence-bar div {
-            height: 100%;
-            background: #caff70;
-            border-radius: 10px;
-        }
-
-        /* ================= CHART ================= */
-
-        .chart {
-            display: flex;
-            height: 260px;
-            margin-top: 25px;
-        }
-
-        .y-axis {
-            width: 45px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            color: #8b9690;
-            font-size: 11px;
-        }
-
-        .chart-area {
-            flex: 1;
-            position: relative;
-            border-left: 1px solid #ddd;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .grid-line {
-            height: 1px;
-            background: #edf0ee;
-            position: absolute;
-            left: 0;
-            right: 0;
-        }
-
-        .grid-line:nth-child(1) {
-            top: 0;
-        }
-
-        .grid-line:nth-child(2) {
-            top: 25%;
-        }
-
-        .grid-line:nth-child(3) {
-            top: 50%;
-        }
-
-        .grid-line:nth-child(4) {
-            top: 75%;
-        }
-
-        .chart-area svg {
-            width: 100%;
-            height: 100%;
-            color: #1d9b57;
-            position: relative;
-            z-index: 2;
-        }
-
-        .chart-labels {
-            display: flex;
-            justify-content: space-between;
-            color: #8b9690;
-            font-size: 11px;
-            margin-left: 45px;
-            margin-top: 10px;
-        }
-
-        #period {
-            padding: 9px 12px;
-            border: 1px solid #dce3df;
-            border-radius: 9px;
-        }
-
-        /* ================= PRIORITY ================= */
-
-        .priority-item {
-            display: flex;
-            align-items: center;
-            gap: 13px;
-            padding: 15px 0;
-            border-bottom: 1px solid #edf0ee;
-        }
-
-        .rank {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: #eef6f1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-        }
-
-        .priority-content {
-            flex: 1;
-        }
-
-        .priority-content b {
-            display: block;
-        }
-
-        .priority-content span {
-            color: #87928c;
-            font-size: 13px;
-        }
-
-        .high {
-            color: #d83d3d;
-        }
-
-        .medium {
-            color: #d18a0c;
-        }
-
-        .low {
-            color: #159447;
-        }
-
-        /* ================= PAGES ================= */
-
-        .page {
-            display: none;
-        }
-
-        .page.active-page {
-            display: block;
-        }
-
-        .page-title {
-            margin-bottom: 25px;
-        }
-
-        .page-title h2 {
-            font-size: 30px;
-            margin: 0;
-        }
-
-        .page-title p {
-            color: #718078;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 25px;
-            border-radius: 18px;
-            box-shadow: 0 7px 25px rgba(0,0,0,0.05);
-        }
-
-        .feature-card h3 {
-            margin-top: 0;
-        }
-
-        .big-number {
-            font-size: 32px;
-            font-weight: bold;
-            margin: 12px 0;
-        }
-
-        /* ================= AI TEST ================= */
-
-        .test-panel {
-            margin-top: 25px;
-        }
-
-        .inputs {
-            display: grid;
-            grid-template-columns: 1fr 180px 180px 190px;
-            gap: 18px;
-            align-items: end;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-        }
-
-        .input-group label {
-            font-size: 13px;
-            color: #65736b;
-        }
-
-        .input-group input[type="number"] {
-            padding: 12px;
-            border: 1px solid #dce4df;
-            border-radius: 10px;
-        }
-
-        .input-group input[type="range"] {
-            accent-color: #159447;
-        }
-
-        .input-group span {
-            font-weight: bold;
-        }
-
-        .predict-btn {
-            border: 0;
-            background: #123d2b;
-            color: white;
-            padding: 13px 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .predict-btn:hover {
-            background: #1c5a3d;
-        }
-
-        .ai-result {
-            margin-top: 25px;
-            padding: 20px;
-            border-radius: 15px;
-            background: #f2f7f4;
-            display: grid;
-            grid-template-columns: 180px 180px 1fr;
-            gap: 25px;
-        }
-
-        .ai-result span {
-            font-size: 11px;
-            letter-spacing: 1px;
-            color: #7a8981;
-        }
-
-        .ai-result h2 {
-            margin: 8px 0 0;
-        }
-
-        .result-message p {
-            margin-top: 8px;
-        }
-
-        /* ================= FOOTER ================= */
-
-        footer {
-            text-align: center;
-            color: #87938d;
-            margin: 35px 0 10px;
-            font-size: 13px;
-        }
-
-        /* ================= MOBILE ================= */
-
-        @media(max-width: 1000px) {
-
-            .sidebar {
-                width: 220px;
-            }
-
-            .main {
-                margin-left: 220px;
-                width: calc(100% - 220px);
-                padding: 25px;
-            }
-
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .dashboard-grid,
-            .lower-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .inputs {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media(max-width: 700px) {
-
-            .sidebar {
-                position: relative;
-                width: 100%;
-                height: auto;
-            }
-
-            .app {
-                display: block;
-            }
-
-            .main {
-                margin-left: 0;
-                width: 100%;
-                padding: 20px;
-            }
-
-            .system {
-                position: relative;
-                left: auto;
-                right: auto;
-                bottom: auto;
-                margin-top: 20px;
-            }
-
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-
-            .stats,
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .inputs,
-            .ai-result {
-                grid-template-columns: 1fr;
-            }
-        }
-
-    </style>
 </head>
 
 
 <body>
 
+
 <div class="app">
 
-    <!-- ================= SIDEBAR ================= -->
+
+    <!-- ================================================= -->
+    <!-- SIDEBAR -->
+    <!-- ================================================= -->
 
     <aside class="sidebar">
 
@@ -796,8 +35,11 @@
             </div>
 
             <div>
+
                 <h2>SmartWaste</h2>
+
                 <span>AI MANAGEMENT</span>
+
             </div>
 
         </div>
@@ -805,52 +47,45 @@
 
         <nav>
 
-            <a href="#"
-               class="nav-link active"
-               onclick="showPage('dashboard', this)">
+            <a href="/" class="active">
                 📊 Dashboard
             </a>
 
-            <a href="#"
-               class="nav-link"
-               onclick="showPage('bins', this)">
+            <a href="#smartBins">
                 🗑️ Smart Bins
             </a>
 
-            <a href="#"
-               class="nav-link"
-               onclick="showPage('analytics', this)">
+            <a href="#analytics">
                 📈 Analytics
             </a>
 
-            <a href="#"
-               class="nav-link"
-               onclick="showPage('collection', this)">
+            <a href="#collection">
                 🚛 Collection
             </a>
 
-            <a href="#"
-               class="nav-link"
-               onclick="showPage('routes', this)">
-                📍 Routes
-            </a>
+            <!-- ROUTES PAGE -->
 
-            <a href="#"
-               class="nav-link"
-               onclick="showPage('ai', this)">
-                🤖 AI Prediction
+            <a href="/routes">
+                📍 Routes
             </a>
 
         </nav>
 
+
+        <!-- SYSTEM STATUS -->
 
         <div class="system">
 
             <div class="online-dot"></div>
 
             <div>
+
                 <b>System Online</b>
-                <small>AI monitoring active</small>
+
+                <small>
+                    AI monitoring active
+                </small>
+
             </div>
 
         </div>
@@ -858,874 +93,697 @@
     </aside>
 
 
-    <!-- ================= MAIN ================= -->
+
+    <!-- ================================================= -->
+    <!-- MAIN -->
+    <!-- ================================================= -->
 
     <main class="main">
 
 
-        <!-- ================= DASHBOARD ================= -->
+        <!-- HEADER -->
 
-        <section id="dashboard" class="page active-page">
+        <header>
 
-            <header>
+            <div>
+
+                <p class="small-title">
+                    SMART CITY • WASTE MANAGEMENT
+                </p>
+
+                <h1>
+                    AI Waste Dashboard
+                </h1>
+
+                <p class="subtitle">
+                    Real-time intelligent monitoring
+                    of smart waste bins
+                </p>
+
+            </div>
+
+
+            <div class="header-right">
+
+                <div class="live">
+
+                    <span></span>
+
+                    LIVE
+
+                </div>
+
+
+                <div class="date">
+
+                    🤖 AI Engine Active
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ================================================= -->
+        <!-- STAT CARDS -->
+        <!-- ================================================= -->
+
+        <section class="stats">
+
+
+            <!-- TOTAL BINS -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span>
+                        Total Bins
+                    </span>
+
+                    <div class="stat-icon">
+                        🗑️
+                    </div>
+
+                </div>
+
+
+                <h2 id="totalBins">
+                    --
+                </h2>
+
+
+                <p class="positive">
+                    ● All monitored
+                </p>
+
+            </div>
+
+
+
+            <!-- ACTION BINS -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span>
+                        Bins Requiring Action
+                    </span>
+
+                    <div class="stat-icon warning">
+                        ⚠️
+                    </div>
+
+                </div>
+
+
+                <h2 id="actionBins">
+                    --
+                </h2>
+
+
+                <p class="warning-text">
+                    ● Needs attention
+                </p>
+
+            </div>
+
+
+
+            <!-- AVERAGE FILL -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span>
+                        Average Fill Level
+                    </span>
+
+                    <div class="stat-icon blue">
+                        📊
+                    </div>
+
+                </div>
+
+
+                <h2 id="averageFill">
+                    --%
+                </h2>
+
+
+                <p class="positive">
+                    ↑ Live sensor data
+                </p>
+
+            </div>
+
+
+
+            <!-- AI ACCURACY -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span>
+                        AI Accuracy
+                    </span>
+
+                    <div class="stat-icon purple">
+                        🤖
+                    </div>
+
+                </div>
+
+
+                <h2 id="aiAccuracy">
+                    --%
+                </h2>
+
+
+                <p class="positive">
+                    ● Model active
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- SMART BINS + AI PREDICTION -->
+        <!-- ================================================= -->
+
+        <section class="dashboard-grid"
+                 id="smartBins">
+
+
+            <!-- SMART BIN MONITORING -->
+
+            <div class="panel bins-panel">
+
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2>
+                            Smart Bin Monitoring
+                        </h2>
+
+                        <p>
+                            Live fill-level status
+                        </p>
+
+                    </div>
+
+
+                    <button class="refresh"
+                            onclick="refreshData()">
+
+                        ↻ Refresh
+
+                    </button>
+
+                </div>
+
+
+                <!-- DYNAMIC BINS -->
+
+                <div class="bins"
+                     id="binsContainer">
+
+                    <p>
+                        Loading smart bins...
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- AI PREDICTION -->
+
+            <div class="panel ai-panel">
+
+
+                <div class="ai-title">
+
+                    <div class="robot">
+                        🤖
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            AI Prediction
+                        </h2>
+
+                        <p>
+                            Machine Learning Engine
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="prediction-box">
+
+
+                    <span class="prediction-label">
+
+                        NEXT OVERFLOW PREDICTION
+
+                    </span>
+
+
+                    <h2 id="nextBin">
+                        --
+                    </h2>
+
+
+                    <div class="prediction-time">
+
+                        <span id="nextTime">
+                            Calculating...
+                        </span>
+
+                    </div>
+
+
+                    <p>
+                        Based on current fill rate
+                        and historical waste patterns.
+                    </p>
+
+                </div>
+
+
+
+                <!-- CONFIDENCE -->
+
+                <div class="confidence">
+
+                    <div>
+
+                        <span>
+                            AI Confidence
+                        </span>
+
+                        <strong id="predictionConfidence">
+                            --%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="confidence-bar">
+
+                        <div id="confidenceBar"
+                             style="width:0%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- ANALYTICS + COLLECTION PRIORITY -->
+        <!-- ================================================= -->
+
+        <section class="lower-grid"
+                 id="analytics">
+
+
+            <!-- ANALYTICS -->
+
+            <div class="panel chart-panel">
+
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2>
+                            Waste Level Analytics
+                        </h2>
+
+                        <p>
+                            Average bin fill level over time
+                        </p>
+
+                    </div>
+
+
+                    <select id="period">
+
+                        <option>
+                            Last 24 Hours
+                        </option>
+
+                        <option>
+                            Last 7 Days
+                        </option>
+
+                        <option>
+                            Last 30 Days
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <div class="chart">
+
+
+                    <div class="y-axis">
+
+                        <span>100%</span>
+
+                        <span>75%</span>
+
+                        <span>50%</span>
+
+                        <span>25%</span>
+
+                        <span>0%</span>
+
+                    </div>
+
+
+                    <div class="chart-area">
+
+
+                        <div class="grid-line"></div>
+
+                        <div class="grid-line"></div>
+
+                        <div class="grid-line"></div>
+
+                        <div class="grid-line"></div>
+
+
+                        <svg viewBox="0 0 700 220"
+                             preserveAspectRatio="none">
+
+
+                            <polyline
+                                id="chartLine"
+                                points=""
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="4"
+                            />
+
+
+                        </svg>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="chart-labels">
+
+                    <span>00:00</span>
+
+                    <span>04:00</span>
+
+                    <span>08:00</span>
+
+                    <span>12:00</span>
+
+                    <span>16:00</span>
+
+                    <span>20:00</span>
+
+                    <span>Now</span>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- COLLECTION PRIORITY -->
+
+            <div class="panel priority-panel"
+                 id="collection">
+
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2>
+                            Collection Priority
+                        </h2>
+
+                        <p>
+                            AI recommended order
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="priorityContainer">
+
+                    <p>
+                        Loading collection priority...
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- AI BIN ASSESSMENT -->
+        <!-- ================================================= -->
+
+        <section class="panel test-panel">
+
+
+            <div class="panel-header">
 
                 <div>
 
-                    <p class="small-title">
-                        SMART CITY • WASTE MANAGEMENT
-                    </p>
-
-                    <h1>
-                        AI Waste Dashboard
-                    </h1>
-
-                    <p class="subtitle">
-                        Real-time intelligent monitoring of smart waste bins
-                    </p>
-
-                </div>
-
-                <div class="header-right">
-
-                    <div class="live">
-                        <span></span>
-                        LIVE
-                    </div>
-
-                    <div class="date">
-                        🤖 AI Engine Active
-                    </div>
-
-                </div>
-
-            </header>
-
-
-            <!-- STATS -->
-
-            <section class="stats">
-
-                <div class="stat-card">
-
-                    <div class="stat-top">
-                        <span>Total Bins</span>
-                        <div class="stat-icon">🗑️</div>
-                    </div>
-
-                    <h2 id="totalBins">--</h2>
-
-                    <p class="positive">
-                        ● All monitored
-                    </p>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-top">
-                        <span>Bins Requiring Action</span>
-                        <div class="stat-icon warning">⚠️</div>
-                    </div>
-
-                    <h2 id="actionBins">--</h2>
-
-                    <p class="warning-text">
-                        ● Needs attention
-                    </p>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-top">
-                        <span>Average Fill Level</span>
-                        <div class="stat-icon blue">📊</div>
-                    </div>
-
-                    <h2 id="averageFill">--%</h2>
-
-                    <p class="positive">
-                        ↑ Live sensor data
-                    </p>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-top">
-                        <span>AI Accuracy</span>
-                        <div class="stat-icon purple">🤖</div>
-                    </div>
-
-                    <h2 id="aiAccuracy">--%</h2>
-
-                    <p class="positive">
-                        ● Model active
-                    </p>
-
-                </div>
-
-            </section>
-
-
-            <!-- BIN + AI -->
-
-            <section class="dashboard-grid">
-
-
-                <div class="panel">
-
-                    <div class="panel-header">
-
-                        <div>
-                            <h2>Smart Bin Monitoring</h2>
-                            <p>Live fill-level status</p>
-                        </div>
-
-                        <button
-                            class="refresh"
-                            onclick="refreshData()">
-                            ↻ Refresh
-                        </button>
-
-                    </div>
-
-                    <div
-                        class="bins"
-                        id="binsContainer">
-
-                        Loading smart bins...
-
-                    </div>
-
-                </div>
-
-
-                <div class="panel ai-panel">
-
-                    <div class="ai-title">
-
-                        <div class="robot">
-                            🤖
-                        </div>
-
-                        <div>
-                            <h2>AI Prediction</h2>
-                            <p>Machine Learning Engine</p>
-                        </div>
-
-                    </div>
-
-
-                    <div class="prediction-box">
-
-                        <span class="prediction-label">
-                            NEXT OVERFLOW PREDICTION
-                        </span>
-
-                        <h2 id="nextBin">
-                            --
-                        </h2>
-
-                        <div class="prediction-time">
-                            <span id="nextTime">
-                                Calculating...
-                            </span>
-                        </div>
-
-                        <p>
-                            Based on current fill rate
-                            and historical waste patterns.
-                        </p>
-
-                    </div>
-
-
-                    <div class="confidence">
-
-                        <div>
-                            <span>AI Confidence</span>
-
-                            <strong id="predictionConfidence">
-                                --%
-                            </strong>
-                        </div>
-
-                        <div class="confidence-bar">
-
-                            <div
-                                id="confidenceBar"
-                                style="width:0%">
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- ANALYTICS + PRIORITY -->
-
-            <section class="lower-grid">
-
-
-                <div class="panel">
-
-                    <div class="panel-header">
-
-                        <div>
-                            <h2>Waste Level Analytics</h2>
-                            <p>
-                                Average bin fill level
-                            </p>
-                        </div>
-
-                        <select id="period">
-                            <option>Last 24 Hours</option>
-                            <option>Last 7 Days</option>
-                            <option>Last 30 Days</option>
-                        </select>
-
-                    </div>
-
-
-                    <div class="chart">
-
-                        <div class="y-axis">
-
-                            <span>100%</span>
-                            <span>75%</span>
-                            <span>50%</span>
-                            <span>25%</span>
-                            <span>0%</span>
-
-                        </div>
-
-
-                        <div class="chart-area">
-
-                            <div class="grid-line"></div>
-                            <div class="grid-line"></div>
-                            <div class="grid-line"></div>
-                            <div class="grid-line"></div>
-
-                            <svg
-                                viewBox="0 0 700 220"
-                                preserveAspectRatio="none">
-
-                                <polyline
-                                    id="chartLine"
-                                    points=""
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="4"/>
-
-                            </svg>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="chart-labels">
-
-                        <span>00:00</span>
-                        <span>04:00</span>
-                        <span>08:00</span>
-                        <span>12:00</span>
-                        <span>16:00</span>
-                        <span>20:00</span>
-                        <span>Now</span>
-
-                    </div>
-
-                </div>
-
-
-                <div class="panel">
-
-                    <div class="panel-header">
-
-                        <div>
-                            <h2>Collection Priority</h2>
-                            <p>
-                                AI recommended order
-                            </p>
-                        </div>
-
-                    </div>
-
-                    <div id="priorityContainer">
-                        Loading...
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- AI TEST -->
-
-            <section class="panel test-panel">
-
-                <div class="panel-header">
-
-                    <div>
-                        <h2>🧠 AI Bin Assessment</h2>
-
-                        <p>
-                            Enter sensor values to get
-                            an ML prediction
-                        </p>
-                    </div>
-
-                </div>
-
-
-                <div class="inputs">
-
-
-                    <div class="input-group">
-
-                        <label>
-                            Fill Level
-                        </label>
-
-                        <input
-                            type="range"
-                            id="fill"
-                            min="0"
-                            max="100"
-                            value="82"
-                            oninput="
-                            document.getElementById('fillValue').innerText =
-                            this.value + '%'
-                            ">
-
-                        <span id="fillValue">
-                            82%
-                        </span>
-
-                    </div>
-
-
-                    <div class="input-group">
-
-                        <label>
-                            Temperature °C
-                        </label>
-
-                        <input
-                            type="number"
-                            id="temperature"
-                            value="30">
-
-                    </div>
-
-
-                    <div class="input-group">
-
-                        <label>
-                            Waste Weight kg
-                        </label>
-
-                        <input
-                            type="number"
-                            id="weight"
-                            value="10">
-
-                    </div>
-
-
-                    <button
-                        class="predict-btn"
-                        onclick="predict()">
-
-                        Run AI Prediction →
-
-                    </button>
-
-                </div>
-
-
-                <div class="ai-result">
-
-                    <div>
-                        <span>STATUS</span>
-                        <h2 id="status">---</h2>
-                    </div>
-
-                    <div>
-                        <span>AI CONFIDENCE</span>
-                        <h2 id="probability">---</h2>
-                    </div>
-
-                    <div class="result-message">
-
-                        <span>RECOMMENDATION</span>
-
-                        <p id="message">
-                            Run the AI model to receive
-                            a recommendation.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-        </section>
-
-
-        <!-- ================= SMART BINS ================= -->
-
-        <section id="bins" class="page">
-
-            <div class="page-title">
-
-                <h2>🗑️ Smart Bin Monitoring</h2>
-
-                <p>
-                    Real-time status of all connected smart waste bins.
-                </p>
-
-            </div>
-
-
-            <div class="panel">
-
-                <div class="panel-header">
-
-                    <div>
-                        <h2>All Smart Bins</h2>
-                        <p>Live sensor information</p>
-                    </div>
-
-                    <button
-                        class="refresh"
-                        onclick="loadBinsPage()">
-
-                        ↻ Update
-
-                    </button>
-
-                </div>
-
-
-                <div
-                    class="bins"
-                    id="allBinsContainer">
-
-                    Loading...
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= ANALYTICS ================= -->
-
-        <section id="analytics" class="page">
-
-            <div class="page-title">
-
-                <h2>📈 Waste Analytics</h2>
-
-                <p>
-                    Intelligent analysis of waste collection data.
-                </p>
-
-            </div>
-
-
-            <div class="feature-grid">
-
-
-                <div class="feature-card">
-
-                    <h3>Average Fill Level</h3>
-
-                    <div
-                        class="big-number"
-                        id="analyticsFill">
-                        --%
-                    </div>
+                    <h2>
+                        🧠 AI Bin Assessment
+                    </h2>
 
                     <p>
-                        Current average capacity
-                    </p>
-
-                </div>
-
-
-                <div class="feature-card">
-
-                    <h3>Total Waste Weight</h3>
-
-                    <div
-                        class="big-number"
-                        id="analyticsWeight">
-                        -- kg
-                    </div>
-
-                    <p>
-                        Across monitored bins
-                    </p>
-
-                </div>
-
-
-                <div class="feature-card">
-
-                    <h3>Average Temperature</h3>
-
-                    <div
-                        class="big-number"
-                        id="analyticsTemp">
-                        --°C
-                    </div>
-
-                    <p>
-                        Current sensor average
-                    </p>
-
-                </div>
-
-
-                <div class="feature-card">
-
-                    <h3>Highest Fill</h3>
-
-                    <div
-                        class="big-number"
-                        id="highestBin">
-                        --
-                    </div>
-
-                    <p id="highestFill">
-                        --
-                    </p>
-
-                </div>
-
-
-                <div class="feature-card">
-
-                    <h3>Lowest Fill</h3>
-
-                    <div
-                        class="big-number"
-                        id="lowestBin">
-                        --
-                    </div>
-
-                    <p id="lowestFill">
-                        --
-                    </p>
-
-                </div>
-
-
-                <div class="feature-card">
-
-                    <h3>AI System</h3>
-
-                    <div class="big-number">
-                        94.2%
-                    </div>
-
-                    <p>
-                        Prediction confidence
+                        Enter sensor values to get
+                        an ML prediction
                     </p>
 
                 </div>
 
             </div>
+
+
+
+            <div class="inputs">
+
+
+                <!-- FILL LEVEL -->
+
+                <div class="input-group">
+
+                    <label>
+                        Fill Level
+                    </label>
+
+
+                    <input
+                        type="range"
+                        id="fill"
+                        min="0"
+                        max="100"
+                        value="82"
+                        oninput="
+                        document.getElementById('fillValue')
+                        .innerText=this.value+'%'
+                        "
+                    >
+
+
+                    <span id="fillValue">
+                        82%
+                    </span>
+
+                </div>
+
+
+
+                <!-- TEMPERATURE -->
+
+                <div class="input-group">
+
+                    <label>
+                        Temperature °C
+                    </label>
+
+
+                    <input
+                        type="number"
+                        id="temperature"
+                        value="30"
+                    >
+
+                </div>
+
+
+
+                <!-- WEIGHT -->
+
+                <div class="input-group">
+
+                    <label>
+                        Waste Weight kg
+                    </label>
+
+
+                    <input
+                        type="number"
+                        id="weight"
+                        value="10"
+                    >
+
+                </div>
+
+
+
+                <!-- PREDICT BUTTON -->
+
+                <button
+                    class="predict-btn"
+                    onclick="predict()"
+                >
+
+                    Run AI Prediction →
+
+                </button>
+
+
+            </div>
+
+
+
+            <!-- AI RESULT -->
+
+            <div class="ai-result">
+
+
+                <div>
+
+                    <span>
+                        STATUS
+                    </span>
+
+                    <h2 id="status">
+                        ---
+                    </h2>
+
+                </div>
+
+
+
+                <div>
+
+                    <span>
+                        AI CONFIDENCE
+                    </span>
+
+                    <h2 id="probability">
+                        ---
+                    </h2>
+
+                </div>
+
+
+
+                <div class="result-message">
+
+                    <span>
+                        RECOMMENDATION
+                    </span>
+
+                    <p id="message">
+
+                        Run the AI model to receive
+                        a recommendation.
+
+                    </p>
+
+                </div>
+
+
+            </div>
+
 
         </section>
 
 
-        <!-- ================= COLLECTION ================= -->
 
-        <section id="collection" class="page">
-
-            <div class="page-title">
-
-                <h2>🚛 Collection Management</h2>
-
-                <p>
-                    AI-generated collection priority.
-                </p>
-
-            </div>
-
-
-            <div class="panel">
-
-                <div class="panel-header">
-
-                    <div>
-                        <h2>Recommended Collection Order</h2>
-                        <p>
-                            Highest fill bins should be collected first.
-                        </p>
-                    </div>
-
-                </div>
-
-
-                <div id="collectionContainer">
-
-                    Loading collection plan...
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= ROUTES ================= -->
-
-        <section id="routes" class="page">
-
-            <div class="page-title">
-
-                <h2>📍 Smart Collection Routes</h2>
-
-                <p>
-                    Optimized route based on bin fill levels.
-                </p>
-
-            </div>
-
-
-            <div class="panel">
-
-                <div class="panel-header">
-
-                    <div>
-                        <h2>AI Collection Route</h2>
-                        <p>
-                            Suggested order for collection vehicle
-                        </p>
-                    </div>
-
-                    <button
-                        class="refresh"
-                        onclick="loadRoutes()">
-
-                        ↻ Generate Route
-
-                    </button>
-
-                </div>
-
-
-                <div id="routesContainer">
-
-                    Loading route...
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= AI PAGE ================= -->
-
-        <section id="ai" class="page">
-
-            <div class="page-title">
-
-                <h2>🤖 AI Prediction Engine</h2>
-
-                <p>
-                    Machine learning based smart bin assessment.
-                </p>
-
-            </div>
-
-
-            <section class="panel">
-
-                <div class="inputs">
-
-
-                    <div class="input-group">
-
-                        <label>
-                            Fill Level
-                        </label>
-
-                        <input
-                            type="range"
-                            id="fill2"
-                            min="0"
-                            max="100"
-                            value="80"
-                            oninput="
-                            document.getElementById('fillValue2').innerText =
-                            this.value + '%'
-                            ">
-
-                        <span id="fillValue2">
-                            80%
-                        </span>
-
-                    </div>
-
-
-                    <div class="input-group">
-
-                        <label>
-                            Temperature °C
-                        </label>
-
-                        <input
-                            type="number"
-                            id="temperature2"
-                            value="30">
-
-                    </div>
-
-
-                    <div class="input-group">
-
-                        <label>
-                            Waste Weight kg
-                        </label>
-
-                        <input
-                            type="number"
-                            id="weight2"
-                            value="15">
-
-                    </div>
-
-
-                    <button
-                        class="predict-btn"
-                        onclick="predictAdvanced()">
-
-                        Analyze Bin →
-
-                    </button>
-
-                </div>
-
-
-                <div class="ai-result">
-
-                    <div>
-                        <span>AI STATUS</span>
-
-                        <h2 id="status2">
-                            ---
-                        </h2>
-                    </div>
-
-
-                    <div>
-                        <span>CONFIDENCE</span>
-
-                        <h2 id="probability2">
-                            ---
-                        </h2>
-                    </div>
-
-
-                    <div class="result-message">
-
-                        <span>AI RECOMMENDATION</span>
-
-                        <p id="message2">
-                            Enter sensor values and run the AI model.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-        </section>
-
+        <!-- ================================================= -->
+        <!-- FOOTER -->
+        <!-- ================================================= -->
 
         <footer>
 
-            SmartWaste AI • Intelligent Waste Management System
+            SmartWaste AI •
+            Intelligent Waste Management System
 
         </footer>
+
 
     </main>
 
 </div>
 
 
+
+<!-- ================================================= -->
+<!-- JAVASCRIPT -->
+<!-- ================================================= -->
+
 <script>
 
-/* =========================================================
-   PAGE NAVIGATION
-========================================================= */
 
-function showPage(pageId, element) {
-
-    event.preventDefault();
-
-    document
-        .querySelectorAll(".page")
-        .forEach(page => {
-            page.classList.remove("active-page");
-        });
-
-    document
-        .getElementById(pageId)
-        .classList.add("active-page");
-
-
-    document
-        .querySelectorAll(".nav-link")
-        .forEach(link => {
-            link.classList.remove("active");
-        });
-
-
-    element.classList.add("active");
-
-
-    if (pageId === "bins") {
-        loadBinsPage();
-    }
-
-    if (pageId === "analytics") {
-        loadAnalytics();
-    }
-
-    if (pageId === "collection") {
-        loadCollection();
-    }
-
-    if (pageId === "routes") {
-        loadRoutes();
-    }
-}
-
-
-/* =========================================================
-   DASHBOARD
-========================================================= */
+/* =====================================================
+   LOAD DASHBOARD
+===================================================== */
 
 async function loadDashboard() {
 
@@ -1734,72 +792,146 @@ async function loadDashboard() {
         const response =
             await fetch("/api/dashboard");
 
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Dashboard API failed"
+            );
+
+        }
+
+
         const data =
             await response.json();
 
 
-        document.getElementById("totalBins")
-            .innerText =
-            data.total_bins;
+        /* TOTAL BINS */
+
+        document.getElementById(
+            "totalBins"
+        ).innerText =
+            data.total_bins ?? 0;
 
 
-        document.getElementById("actionBins")
-            .innerText =
-            data.action_bins;
+
+        /* ACTION BINS */
+
+        document.getElementById(
+            "actionBins"
+        ).innerText =
+            data.action_bins ?? 0;
 
 
-        document.getElementById("averageFill")
-            .innerText =
-            Math.round(data.average_fill) + "%";
+
+        /* AVERAGE FILL */
+
+        document.getElementById(
+            "averageFill"
+        ).innerText =
+            Math.round(
+                data.average_fill ?? 0
+            ) + "%";
 
 
-        document.getElementById("aiAccuracy")
-            .innerText =
-            data.ai_accuracy + "%";
+
+        /* AI ACCURACY */
+
+        document.getElementById(
+            "aiAccuracy"
+        ).innerText =
+            (data.ai_accuracy ??
+             data.ai_confidence ??
+             0) + "%";
 
 
-        document.getElementById("nextBin")
-            .innerText =
-            data.next_overflow_bin;
+
+        /* NEXT OVERFLOW BIN */
+
+        document.getElementById(
+            "nextBin"
+        ).innerText =
+            data.next_overflow_bin ??
+            "--";
 
 
-        document.getElementById("nextTime")
-            .innerText =
-            "~ " + data.overflow_hours + " hours";
+
+        /* OVERFLOW TIME */
+
+        document.getElementById(
+            "nextTime"
+        ).innerText =
+            data.overflow_hours !== undefined
+                ? "~ " +
+                  data.overflow_hours +
+                  " hours"
+                : "Calculating...";
 
 
-        document.getElementById("predictionConfidence")
-            .innerText =
-            data.ai_confidence + "%";
+
+        /* AI CONFIDENCE */
+
+        const confidence =
+            Number(
+                data.ai_confidence ?? 0
+            );
 
 
-        document.getElementById("confidenceBar")
-            .style.width =
-            data.ai_confidence + "%";
+        document.getElementById(
+            "predictionConfidence"
+        ).innerText =
+            confidence + "%";
 
+
+        document.getElementById(
+            "confidenceBar"
+        ).style.width =
+            Math.min(
+                confidence,
+                100
+            ) + "%";
+
+
+
+        /* CHART */
 
         if (data.chart) {
 
             drawChart(data.chart);
 
         }
+        else {
+
+            /*
+               Current backend does not send
+               historical chart data.
+
+               Create a visual trend using
+               current bin values.
+            */
+
+            loadChartFromBins();
+
+        }
+
 
     }
-
     catch (error) {
 
         console.error(
-            "Dashboard error:",
+            "Dashboard Error:",
             error
         );
 
     }
+
 }
 
 
-/* =========================================================
-   BINS
-========================================================= */
+
+/* =====================================================
+   LOAD SMART BINS
+===================================================== */
 
 async function loadBins() {
 
@@ -1807,6 +939,16 @@ async function loadBins() {
 
         const response =
             await fetch("/api/bins");
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Bins API failed"
+            );
+
+        }
+
 
         const bins =
             await response.json();
@@ -1821,157 +963,78 @@ async function loadBins() {
         container.innerHTML = "";
 
 
-        bins.forEach(bin => {
-
-            container.innerHTML += createBinHTML(bin);
-
-        });
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Bins error:",
-            error
-        );
-
-    }
-}
+        bins.forEach(
+            function(bin) {
 
 
-function createBinHTML(bin) {
-
-    let statusClass =
-        "normal-status";
-
-    let barClass =
-        "normal-bar";
+                const fill =
+                    Number(
+                        bin.fill_level
+                    );
 
 
-    if (bin.status === "WARNING") {
-
-        statusClass =
-            "warning-status";
-
-        barClass =
-            "warning-bar";
-
-    }
+                let status =
+                    "NORMAL";
 
 
-    if (bin.status === "FULL") {
-
-        statusClass =
-            "full-status";
-
-        barClass =
-            "full-bar";
-
-    }
+                let statusClass =
+                    "normal";
 
 
-    return `
-
-        <div class="bin">
-
-            <div class="bin-header">
-
-                <b>${bin.id}</b>
-
-                <span class="status ${statusClass}">
-                    ${bin.status}
-                </span>
-
-            </div>
+                let barClass =
+                    "normal-bar";
 
 
-            <div class="progress">
+                if (fill >= 85) {
 
-                <div
-                    class="progress-bar ${barClass}"
-                    style="width:${bin.fill_level}%">
+                    status =
+                        "FULL";
 
-                </div>
+                    statusClass =
+                        "full-status";
 
-            </div>
+                    barClass =
+                        "full-bar";
 
+                }
+                else if (fill >= 60) {
 
-            <div class="bin-info">
+                    status =
+                        "WARNING";
 
-                <strong>
-                    ${bin.fill_level}%
-                </strong>
+                    statusClass =
+                        "warning-status";
 
-                <span>
-                    ${bin.location}
-                </span>
+                    barClass =
+                        "warning-bar";
 
-            </div>
-
-        </div>
-
-    `;
-
-}
+                }
 
 
-/* =========================================================
-   SMART BINS PAGE
-========================================================= */
-
-async function loadBinsPage() {
-
-    try {
-
-        const response =
-            await fetch("/api/bins");
-
-        const bins =
-            await response.json();
+                const element =
+                    document.createElement(
+                        "div"
+                    );
 
 
-        const container =
-            document.getElementById(
-                "allBinsContainer"
-            );
+                element.className =
+                    "bin";
 
 
-        container.innerHTML = "";
-
-
-        bins.forEach(bin => {
-
-            container.innerHTML += `
-
-                <div class="bin">
+                element.innerHTML = `
 
                     <div class="bin-header">
 
-                        <div>
+                        <b>
+                            ${bin.id}
+                        </b>
 
-                            <b>
-                                ${bin.id}
-                            </b>
+                        <span class="
+                            status
+                            ${statusClass}
+                        ">
 
-                            <br>
-
-                            <small>
-                                ${bin.location}
-                            </small>
-
-                        </div>
-
-                        <span class="status
-                            ${
-                                bin.status === "FULL"
-                                ? "full-status"
-                                : bin.status === "WARNING"
-                                ? "warning-status"
-                                : "normal-status"
-                            }">
-
-                            ${bin.status}
+                            ${status}
 
                         </span>
 
@@ -1981,17 +1044,14 @@ async function loadBinsPage() {
                     <div class="progress">
 
                         <div
-                            class="progress-bar
-                            ${
-                                bin.status === "FULL"
-                                ? "full-bar"
-                                : bin.status === "WARNING"
-                                ? "warning-bar"
-                                : "normal-bar"
-                            }"
-                            style="width:${bin.fill_level}%">
-
-                        </div>
+                            class="
+                                progress-bar
+                                ${barClass}
+                            "
+                            style="
+                                width:${fill}%
+                            "
+                        ></div>
 
                     </div>
 
@@ -1999,49 +1059,92 @@ async function loadBinsPage() {
                     <div class="bin-info">
 
                         <strong>
-                            Fill: ${bin.fill_level}%
+                            ${fill}%
                         </strong>
 
                         <span>
-                            🌡 ${bin.temperature}°C
-                            &nbsp; | &nbsp;
-                            ⚖ ${bin.weight} kg
+                            ${bin.location}
                         </span>
 
                     </div>
 
-                </div>
+                `;
 
-            `;
 
-        });
+                container.appendChild(
+                    element
+                );
+
+            }
+        );
+
+
+        /*
+            Update chart using
+            current bin values
+        */
+
+        const values =
+            bins.map(
+                bin =>
+                    Number(
+                        bin.fill_level
+                    )
+            );
+
+
+        drawChart(values);
+
 
     }
-
     catch (error) {
 
         console.error(
-            "Smart bins error:",
+            "Bins Error:",
             error
         );
+
+
+        document.getElementById(
+            "binsContainer"
+        ).innerHTML = `
+
+            <p>
+                Unable to load bin data.
+            </p>
+
+        `;
 
     }
 
 }
 
 
-/* =========================================================
-   PRIORITY
-========================================================= */
+
+/* =====================================================
+   LOAD COLLECTION PRIORITY
+===================================================== */
 
 async function loadPriority() {
 
     try {
 
         const response =
-            await fetch("/api/priority");
+            await fetch(
+                "/api/priority"
+            );
 
-        const data =
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Priority API failed"
+            );
+
+        }
+
+
+        const priority =
             await response.json();
 
 
@@ -2054,306 +1157,159 @@ async function loadPriority() {
         container.innerHTML = "";
 
 
-        data.forEach((item, index) => {
-
-            const cls =
-                item.priority.toLowerCase();
-
-
-            container.innerHTML += `
-
-                <div class="priority-item">
-
-                    <div class="rank">
-                        ${String(index + 1).padStart(2, "0")}
-                    </div>
+        priority
+            .slice(0, 5)
+            .forEach(
+                function(item, index) {
 
 
-                    <div class="priority-content">
-
-                        <b>
-                            ${item.id}
-                        </b>
-
-                        <span>
-                            ${item.location}
-                            • ${item.fill_level}%
-                        </span>
-
-                    </div>
+                    let priorityClass =
+                        "low";
 
 
-                    <strong class="${cls}">
-                        ${item.priority}
-                    </strong>
+                    if (
+                        item.priority ===
+                        "HIGH"
+                    ) {
 
-                </div>
+                        priorityClass =
+                            "high";
 
-            `;
+                    }
+                    else if (
+                        item.priority ===
+                        "MEDIUM"
+                    ) {
 
-        });
+                        priorityClass =
+                            "medium";
 
-    }
-
-    catch (error) {
-
-        console.error(
-            "Priority error:",
-            error
-        );
-
-    }
-
-}
+                    }
 
 
-/* =========================================================
-   ANALYTICS
-========================================================= */
-
-async function loadAnalytics() {
-
-    try {
-
-        const response =
-            await fetch("/api/analytics");
-
-        const data =
-            await response.json();
+                    const element =
+                        document.createElement(
+                            "div"
+                        );
 
 
-        document.getElementById(
-            "analyticsFill"
-        ).innerText =
-            data.average_fill + "%";
+                    element.className =
+                        "priority-item";
 
 
-        document.getElementById(
-            "analyticsWeight"
-        ).innerText =
-            data.total_weight + " kg";
+                    element.innerHTML = `
+
+                        <div class="rank">
+
+                            ${String(
+                                index + 1
+                            ).padStart(2, "0")}
+
+                        </div>
 
 
-        document.getElementById(
-            "analyticsTemp"
-        ).innerText =
-            data.average_temperature + "°C";
+                        <div class="
+                            priority-content
+                        ">
+
+                            <b>
+                                ${item.id}
+                            </b>
+
+                            <span>
+                                ${item.location}
+                            </span>
+
+                        </div>
 
 
-        document.getElementById(
-            "highestBin"
-        ).innerText =
-            data.highest_bin;
+                        <strong
+                            class="${priorityClass}"
+                        >
+
+                            ${item.priority}
+
+                        </strong>
+
+                    `;
 
 
-        document.getElementById(
-            "highestFill"
-        ).innerText =
-            data.highest_fill + "% fill";
+                    container.appendChild(
+                        element
+                    );
 
-
-        document.getElementById(
-            "lowestBin"
-        ).innerText =
-            data.lowest_bin;
-
-
-        document.getElementById(
-            "lowestFill"
-        ).innerText =
-            data.lowest_fill + "% fill";
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Analytics error:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   COLLECTION
-========================================================= */
-
-async function loadCollection() {
-
-    try {
-
-        const response =
-            await fetch("/api/priority");
-
-        const data =
-            await response.json();
-
-
-        const container =
-            document.getElementById(
-                "collectionContainer"
+                }
             );
 
 
-        container.innerHTML = "";
-
-
-        data.forEach((item, index) => {
-
-            const cls =
-                item.priority.toLowerCase();
-
-
-            container.innerHTML += `
-
-                <div class="priority-item">
-
-                    <div class="rank">
-                        ${index + 1}
-                    </div>
-
-
-                    <div class="priority-content">
-
-                        <b>
-                            ${item.id}
-                        </b>
-
-                        <span>
-                            ${item.location}
-                            • Fill Level:
-                            ${item.fill_level}%
-                        </span>
-
-                    </div>
-
-
-                    <strong class="${cls}">
-                        ${item.priority}
-                    </strong>
-
-                </div>
-
-            `;
-
-        });
-
     }
-
     catch (error) {
 
         console.error(
-            "Collection error:",
+            "Priority Error:",
             error
         );
+
+
+        document.getElementById(
+            "priorityContainer"
+        ).innerHTML = `
+
+            <p>
+                Unable to load priority data.
+            </p>
+
+        `;
 
     }
 
 }
 
 
-/* =========================================================
-   ROUTES
-========================================================= */
 
-async function loadRoutes() {
-
-    try {
-
-        const response =
-            await fetch("/api/routes");
-
-        const data =
-            await response.json();
-
-
-        const container =
-            document.getElementById(
-                "routesContainer"
-            );
-
-
-        container.innerHTML = "";
-
-
-        data.forEach(item => {
-
-            const cls =
-                item.priority.toLowerCase();
-
-
-            container.innerHTML += `
-
-                <div class="priority-item">
-
-                    <div class="rank">
-                        STOP ${item.stop}
-                    </div>
-
-
-                    <div class="priority-content">
-
-                        <b>
-                            ${item.bin}
-                        </b>
-
-                        <span>
-                            📍 ${item.location}
-                            • ${item.fill}% full
-                        </span>
-
-                    </div>
-
-
-                    <strong class="${cls}">
-                        ${item.priority}
-                    </strong>
-
-                </div>
-
-            `;
-
-        });
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Routes error:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   CHART
-========================================================= */
+/* =====================================================
+   DRAW ANALYTICS CHART
+===================================================== */
 
 function drawChart(values) {
 
-    if (!values ||
-        values.length === 0) {
+
+    if (
+        !Array.isArray(values) ||
+        values.length === 0
+    ) {
 
         return;
 
     }
 
 
-    const width = 700;
+    const width =
+        700;
 
-    const height = 220;
+
+    const height =
+        220;
 
 
     const points =
         values.map(
-            (value, index) => {
+            function(value, index) {
+
+
+                value =
+                    Number(value);
+
+
+                value =
+                    Math.max(
+                        0,
+                        Math.min(
+                            100,
+                            value
+                        )
+                    );
+
 
                 const x =
                     (
@@ -2368,37 +1324,79 @@ function drawChart(values) {
                 const y =
                     height -
                     (
-                        Math.max(
-                            0,
-                            Math.min(
-                                100,
-                                Number(value)
-                            )
-                        ) / 100
+                        value / 100
                     ) * height;
 
 
-                return `${x},${y}`;
+                return (
+                    x + "," + y
+                );
 
             }
         );
 
 
-    document
-        .getElementById("chartLine")
-        .setAttribute(
-            "points",
-            points.join(" ")
-        );
+    document.getElementById(
+        "chartLine"
+    ).setAttribute(
+        "points",
+        points.join(" ")
+    );
 
 }
 
 
-/* =========================================================
-   REFRESH
-========================================================= */
+
+/* =====================================================
+   CHART FROM CURRENT BINS
+===================================================== */
+
+async function loadChartFromBins() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/bins"
+            );
+
+
+        const bins =
+            await response.json();
+
+
+        const values =
+            bins.map(
+                b =>
+                    Number(
+                        b.fill_level
+                    )
+            );
+
+
+        drawChart(values);
+
+
+    }
+    catch (error) {
+
+        console.error(
+            "Chart Error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   REFRESH SENSOR DATA
+===================================================== */
 
 async function refreshData() {
+
 
     const button =
         document.querySelector(
@@ -2406,26 +1404,43 @@ async function refreshData() {
         );
 
 
-    if (button) {
+    button.innerText =
+        "↻ Refreshing...";
 
-        button.innerText =
-            "↻ Refreshing...";
 
-        button.disabled =
-            true;
-
-    }
+    button.disabled =
+        true;
 
 
     try {
 
-        await fetch(
-            "/api/refresh",
-            {
-                method: "POST"
-            }
-        );
 
+        const response =
+            await fetch(
+                "/api/refresh",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    }
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Refresh failed"
+            );
+
+        }
+
+
+        /*
+            Reload all live data
+        */
 
         await Promise.all([
 
@@ -2437,36 +1452,35 @@ async function refreshData() {
 
         ]);
 
-    }
 
+    }
     catch (error) {
 
         console.error(
-            "Refresh error:",
+            "Refresh Error:",
             error
         );
 
     }
 
 
-    if (button) {
+    button.innerText =
+        "↻ Refresh";
 
-        button.innerText =
-            "↻ Refresh";
 
-        button.disabled =
-            false;
-
-    }
+    button.disabled =
+        false;
 
 }
 
 
-/* =========================================================
+
+/* =====================================================
    AI PREDICTION
-========================================================= */
+===================================================== */
 
 async function predict() {
+
 
     const fill =
         document.getElementById(
@@ -2486,43 +1500,55 @@ async function predict() {
         ).value;
 
 
-    const status =
+    const statusElement =
         document.getElementById(
             "status"
         );
 
 
-    const probability =
+    const probabilityElement =
         document.getElementById(
             "probability"
         );
 
 
-    const message =
+    const messageElement =
         document.getElementById(
             "message"
         );
 
 
-    status.innerText =
+    /*
+        Loading state
+    */
+
+    statusElement.innerText =
         "Predicting...";
 
 
-    probability.innerText =
+    probabilityElement.innerText =
         "...";
 
 
+    messageElement.innerText =
+        "AI model is analyzing sensor data...";
+
+
     try {
+
 
         const response =
             await fetch(
                 "/predict",
                 {
+
                     method: "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json"
+
                     },
 
                     body: JSON.stringify({
@@ -2542,34 +1568,88 @@ async function predict() {
             );
 
 
+        if (!response.ok) {
+
+            throw new Error(
+                "Prediction failed"
+            );
+
+        }
+
+
         const result =
             await response.json();
 
 
-        status.innerText =
+        /*
+            Display result
+        */
+
+        statusElement.innerText =
             result.status;
 
 
-        probability.innerText =
-            result.probability + "%";
+        probabilityElement.innerText =
+            result.probability +
+            "%";
 
 
-        showRecommendation(
-            result.status,
-            message
-        );
+        const status =
+            String(
+                result.status
+            ).toLowerCase();
+
+
+        /*
+            Recommendation
+        */
+
+        if (
+            status.includes("full") ||
+            status.includes("overflow")
+        ) {
+
+            messageElement.innerText =
+                "🚨 Immediate collection recommended.";
+
+        }
+
+        else if (
+            status.includes("warning")
+        ) {
+
+            messageElement.innerText =
+                "⚠️ Schedule collection soon.";
+
+        }
+
+        else {
+
+            messageElement.innerText =
+                "✅ No immediate collection required.";
+
+        }
+
 
     }
-
     catch (error) {
 
-        status.innerText =
+
+        console.error(
+            "Prediction Error:",
+            error
+        );
+
+
+        statusElement.innerText =
             "ERROR";
 
-        probability.innerText =
+
+        probabilityElement.innerText =
             "--";
 
-        message.innerText =
+
+        messageElement.innerText =
             "Unable to connect to AI server.";
 
     }
@@ -2577,168 +1657,10 @@ async function predict() {
 }
 
 
-/* =========================================================
-   ADVANCED AI PAGE
-========================================================= */
 
-async function predictAdvanced() {
-
-    const fill =
-        document.getElementById(
-            "fill2"
-        ).value;
-
-
-    const temperature =
-        document.getElementById(
-            "temperature2"
-        ).value;
-
-
-    const weight =
-        document.getElementById(
-            "weight2"
-        ).value;
-
-
-    const status =
-        document.getElementById(
-            "status2"
-        );
-
-
-    const probability =
-        document.getElementById(
-            "probability2"
-        );
-
-
-    const message =
-        document.getElementById(
-            "message2"
-        );
-
-
-    status.innerText =
-        "Analyzing...";
-
-
-    probability.innerText =
-        "...";
-
-
-    try {
-
-        const response =
-            await fetch(
-                "/predict",
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-
-                        fill_level:
-                            fill,
-
-                        temperature:
-                            temperature,
-
-                        weight:
-                            weight
-
-                    })
-
-                }
-            );
-
-
-        const result =
-            await response.json();
-
-
-        status.innerText =
-            result.status;
-
-
-        probability.innerText =
-            result.probability + "%";
-
-
-        showRecommendation(
-            result.status,
-            message
-        );
-
-    }
-
-    catch (error) {
-
-        status.innerText =
-            "ERROR";
-
-        probability.innerText =
-            "--";
-
-        message.innerText =
-            "AI server connection failed.";
-
-    }
-
-}
-
-
-/* =========================================================
-   RECOMMENDATION
-========================================================= */
-
-function showRecommendation(
-    prediction,
-    element
-) {
-
-    const value =
-        String(
-            prediction
-        ).toLowerCase();
-
-
-    if (
-        value.includes("full") ||
-        value.includes("overflow")
-    ) {
-
-        element.innerText =
-            "🚨 Immediate collection recommended.";
-
-    }
-
-    else if (
-        value.includes("warning")
-    ) {
-
-        element.innerText =
-            "⚠️ Collection should be scheduled soon.";
-
-    }
-
-    else {
-
-        element.innerText =
-            "✅ Bin is currently safe. No immediate collection required.";
-
-    }
-
-}
-
-
-/* =========================================================
-   INITIAL LOAD
-========================================================= */
+/* =====================================================
+   INITIAL PAGE LOAD
+===================================================== */
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -2754,9 +1676,10 @@ document.addEventListener(
 );
 
 
-/* =========================================================
+
+/* =====================================================
    AUTO REFRESH
-========================================================= */
+===================================================== */
 
 setInterval(
     function() {
@@ -2771,7 +1694,10 @@ setInterval(
     30000
 );
 
+
 </script>
 
+
 </body>
+
 </html>
