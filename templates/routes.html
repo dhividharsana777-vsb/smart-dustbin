@@ -15,6 +15,10 @@
 
     <style>
 
+        /* ==========================================
+           ROUTE FORM
+        ========================================== */
+
         .route-form {
             background: #ffffff;
             padding: 25px;
@@ -64,10 +68,12 @@
             border-radius: 12px;
             cursor: pointer;
             background: #fafafa;
+            transition: 0.2s;
         }
 
         .bin-check:hover {
             border-color: #2d6a4f;
+            transform: translateY(-2px);
         }
 
         .bin-check input {
@@ -97,12 +103,18 @@
             color: #173f2b;
             font-weight: 600;
             cursor: pointer;
+            margin-left: 10px;
         }
 
         .auto-btn:hover {
             background: #173f2b;
             color: white;
         }
+
+
+        /* ==========================================
+           ROUTE LIST
+        ========================================== */
 
         .route-list {
             margin-top: 20px;
@@ -126,6 +138,7 @@
             justify-content: center;
             font-weight: bold;
             color: #173f2b;
+            flex-shrink: 0;
         }
 
         .stop-details {
@@ -155,6 +168,11 @@
             color: #15803d;
             font-weight: bold;
         }
+
+
+        /* ==========================================
+           ROUTE SUMMARY
+        ========================================== */
 
         .route-summary {
             display: grid;
@@ -189,6 +207,190 @@
             display: none;
         }
 
+
+        /* ==========================================
+           AI ROUTE MAP
+        ========================================== */
+
+        .route-map {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 25px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+        }
+
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .map-header h2 {
+            margin: 0;
+        }
+
+        .map-header p {
+            margin: 5px 0 0;
+            color: #718096;
+        }
+
+        .map-area {
+            position: relative;
+            min-height: 430px;
+            border-radius: 16px;
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(45,106,79,0.06) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    rgba(45,106,79,0.06) 1px,
+                    transparent 1px
+                );
+            background-size: 45px 45px;
+            border: 1px solid #dfe8e2;
+            overflow: hidden;
+        }
+
+        .map-road {
+            position: absolute;
+            background: #d8e1dc;
+            border-radius: 50px;
+            transform-origin: center;
+        }
+
+        .road-1 {
+            width: 90%;
+            height: 18px;
+            left: 5%;
+            top: 48%;
+            transform: rotate(-12deg);
+        }
+
+        .road-2 {
+            width: 75%;
+            height: 14px;
+            left: 12%;
+            top: 55%;
+            transform: rotate(28deg);
+        }
+
+        .road-3 {
+            width: 65%;
+            height: 12px;
+            left: 20%;
+            top: 35%;
+            transform: rotate(65deg);
+        }
+
+        .route-line {
+            position: absolute;
+            height: 5px;
+            background: #173f2b;
+            transform-origin: left center;
+            border-radius: 10px;
+            z-index: 2;
+        }
+
+        .route-node {
+            position: absolute;
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            z-index: 5;
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.18);
+            transition: 0.2s;
+        }
+
+        .route-node:hover {
+            transform: scale(1.12);
+        }
+
+        .node-high {
+            background: #dc2626;
+        }
+
+        .node-medium {
+            background: #d97706;
+        }
+
+        .node-low {
+            background: #15803d;
+        }
+
+        .node-label {
+            position: absolute;
+            top: 58px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 7px 10px;
+            border-radius: 8px;
+            white-space: nowrap;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+            color: #173f2b;
+            font-size: 12px;
+        }
+
+        .map-legend {
+            display: flex;
+            gap: 25px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-high {
+            background: #dc2626;
+        }
+
+        .legend-medium {
+            background: #d97706;
+        }
+
+        .legend-low {
+            background: #15803d;
+        }
+
+
+        /* ==========================================
+           LOADING
+        ========================================== */
+
+        .loading-route {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+
+
+        /* ==========================================
+           RESPONSIVE
+        ========================================== */
+
         @media(max-width:900px) {
 
             .form-grid {
@@ -205,6 +407,27 @@
 
         }
 
+        @media(max-width:700px) {
+
+            .map-area {
+                min-height: 350px;
+            }
+
+            .route-stop {
+                gap: 10px;
+            }
+
+            .node-label {
+                font-size: 10px;
+            }
+
+            .auto-btn {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+
+        }
+
     </style>
 
 </head>
@@ -212,11 +435,12 @@
 
 <body>
 
-
 <div class="app">
 
 
-    <!-- SIDEBAR -->
+    <!-- ==========================================
+         SIDEBAR
+    ========================================== -->
 
     <aside class="sidebar">
 
@@ -283,7 +507,9 @@
 
 
 
-    <!-- MAIN -->
+    <!-- ==========================================
+         MAIN
+    ========================================== -->
 
     <main class="main">
 
@@ -312,8 +538,11 @@
             <div class="header-right">
 
                 <div class="live">
+
                     <span></span>
+
                     LIVE
+
                 </div>
 
                 <div class="date">
@@ -326,7 +555,9 @@
 
 
 
-        <!-- ROUTE SUMMARY -->
+        <!-- ==========================================
+             ROUTE SUMMARY
+        ========================================== -->
 
         <section class="route-summary">
 
@@ -386,9 +617,9 @@
 
 
 
-        <!-- ================================================= -->
-        <!-- MANUAL ROUTE CREATION -->
-        <!-- ================================================= -->
+        <!-- ==========================================
+             MANUAL ROUTE CREATION
+        ========================================== -->
 
         <section class="route-form">
 
@@ -460,9 +691,11 @@
             <div class="bin-selection">
 
                 <label>
+
                     <strong>
                         Select Bins
                     </strong>
+
                 </label>
 
 
@@ -502,9 +735,9 @@
 
 
 
-        <!-- ================================================= -->
-        <!-- AI ROUTE -->
-        <!-- ================================================= -->
+        <!-- ==========================================
+             AI ROUTE LIST
+        ========================================== -->
 
         <section class="panel">
 
@@ -554,6 +787,104 @@
 
 
 
+        <!-- ==========================================
+             AI ROUTE MAP
+        ========================================== -->
+
+        <section class="route-map">
+
+            <div class="map-header">
+
+                <div>
+
+                    <h2>
+                        🗺️ AI Route Map
+                    </h2>
+
+                    <p>
+                        Visualized collection path based on bin priority
+                    </p>
+
+                </div>
+
+                <strong id="mapVehicle">
+                    🚛 AI ROUTE
+                </strong>
+
+            </div>
+
+
+            <div id="mapArea"
+                 class="map-area">
+
+                <!-- Roads -->
+
+                <div class="map-road road-1"></div>
+
+                <div class="map-road road-2"></div>
+
+                <div class="map-road road-3"></div>
+
+
+                <div id="mapMessage"
+                     style="
+                     display:flex;
+                     height:100%;
+                     min-height:430px;
+                     align-items:center;
+                     justify-content:center;
+                     color:#718096;
+                     position:relative;
+                     z-index:10;
+                     ">
+
+                    Generate an AI route to view the map.
+
+                </div>
+
+            </div>
+
+
+            <!-- LEGEND -->
+
+            <div class="map-legend">
+
+                <div class="legend-item">
+
+                    <span class="legend-dot legend-high"></span>
+
+                    High Priority
+
+                </div>
+
+
+                <div class="legend-item">
+
+                    <span class="legend-dot legend-medium"></span>
+
+                    Medium Priority
+
+                </div>
+
+
+                <div class="legend-item">
+
+                    <span class="legend-dot legend-low"></span>
+
+                    Low Priority
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             FOOTER
+        ========================================== -->
+
         <footer>
 
             SmartWaste AI •
@@ -571,9 +902,9 @@
 <script>
 
 
-/* =====================================================
+/* ==========================================
    LOAD BINS
-===================================================== */
+========================================== */
 
 async function loadBins() {
 
@@ -621,9 +952,13 @@ async function loadBins() {
                     <br>
 
                     <small>
+
                         ${bin.location}
+
                         •
+
                         ${bin.fill_level}% full
+
                     </small>
 
                 </label>
@@ -637,6 +972,7 @@ async function loadBins() {
 
 
     }
+
     catch(error) {
 
         console.error(error);
@@ -652,9 +988,9 @@ async function loadBins() {
 
 
 
-/* =====================================================
+/* ==========================================
    GENERATE AUTOMATIC ROUTE
-===================================================== */
+========================================== */
 
 async function generateAutomaticRoute() {
 
@@ -666,11 +1002,22 @@ async function generateAutomaticRoute() {
             );
 
 
+        if (!response.ok) {
+
+            throw new Error(
+                "Route API failed"
+            );
+
+        }
+
+
         const data =
             await response.json();
 
 
         displayRoute(data);
+
+        displayRouteMap(data);
 
 
         showMessage(
@@ -679,6 +1026,7 @@ async function generateAutomaticRoute() {
 
 
     }
+
     catch(error) {
 
         console.error(error);
@@ -693,9 +1041,9 @@ async function generateAutomaticRoute() {
 
 
 
-/* =====================================================
+/* ==========================================
    CREATE MANUAL ROUTE
-===================================================== */
+========================================== */
 
 async function createRoute() {
 
@@ -738,8 +1086,10 @@ async function createRoute() {
                     method: "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json"
+
                     },
 
                     body: JSON.stringify({
@@ -756,11 +1106,22 @@ async function createRoute() {
             );
 
 
+        if (!response.ok) {
+
+            throw new Error(
+                "Route creation failed"
+            );
+
+        }
+
+
         const data =
             await response.json();
 
 
         displayRoute(data);
+
+        displayRouteMap(data);
 
 
         showMessage(
@@ -770,6 +1131,7 @@ async function createRoute() {
 
 
     }
+
     catch(error) {
 
         console.error(error);
@@ -784,9 +1146,9 @@ async function createRoute() {
 
 
 
-/* =====================================================
+/* ==========================================
    DISPLAY ROUTE
-===================================================== */
+========================================== */
 
 function displayRoute(data) {
 
@@ -826,6 +1188,19 @@ function displayRoute(data) {
     container.innerHTML = "";
 
 
+    if (!data.route || data.route.length === 0) {
+
+        container.innerHTML = `
+            <p style="text-align:center;padding:40px;color:#718096">
+                No bins selected for this route.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
     data.route.forEach(
         function(stop, index) {
 
@@ -843,6 +1218,7 @@ function displayRoute(data) {
                     "priority-high";
 
             }
+
             else if(
                 stop.priority ===
                 "MEDIUM"
@@ -880,9 +1256,13 @@ function displayRoute(data) {
                     </strong>
 
                     <p>
+
                         📍 ${stop.location}
+
                         •
+
                         ${stop.fill_level}% full
+
                     </p>
 
                 </div>
@@ -908,9 +1288,322 @@ function displayRoute(data) {
 
 
 
-/* =====================================================
+/* ==========================================
+   AI ROUTE MAP
+========================================== */
+
+function displayRouteMap(data) {
+
+    const map =
+        document.getElementById(
+            "mapArea"
+        );
+
+
+    const message =
+        document.getElementById(
+            "mapMessage"
+        );
+
+
+    const vehicle =
+        document.getElementById(
+            "mapVehicle"
+        );
+
+
+    if (
+        !map ||
+        !data.route ||
+        data.route.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    /* Hide message */
+
+    if (message) {
+
+        message.style.display =
+            "none";
+
+    }
+
+
+    /* Show vehicle */
+
+    if (vehicle) {
+
+        vehicle.innerText =
+            "🚛 " +
+            (data.vehicle ||
+             "AI ROUTE");
+
+    }
+
+
+    /* Remove old route */
+
+    map.querySelectorAll(
+        ".route-node, .route-line"
+    ).forEach(
+        function(element) {
+
+            element.remove();
+
+        }
+    );
+
+
+    /*
+       Map positions.
+       These are visual positions,
+       not real GPS coordinates.
+    */
+
+    const positions = [
+
+        [12, 20],
+
+        [30, 12],
+
+        [50, 22],
+
+        [70, 15],
+
+        [82, 38],
+
+        [68, 65],
+
+        [42, 72],
+
+        [18, 62]
+
+    ];
+
+
+    const nodes = [];
+
+
+    /* ==========================================
+       CREATE BIN NODES
+    ========================================== */
+
+    data.route.forEach(
+        function(stop, index) {
+
+
+            const position =
+                positions[
+                    index %
+                    positions.length
+                ];
+
+
+            let priorityClass =
+                "node-low";
+
+
+            if (
+                stop.priority ===
+                "HIGH"
+            ) {
+
+                priorityClass =
+                    "node-high";
+
+            }
+
+            else if (
+                stop.priority ===
+                "MEDIUM"
+            ) {
+
+                priorityClass =
+                    "node-medium";
+
+            }
+
+
+            const node =
+                document.createElement(
+                    "div"
+                );
+
+
+            node.className =
+                "route-node " +
+                priorityClass;
+
+
+            node.style.left =
+                position[0] +
+                "%";
+
+
+            node.style.top =
+                position[1] +
+                "%";
+
+
+            node.innerHTML = `
+
+                ${index + 1}
+
+                <div class="node-label">
+
+                    <strong>
+                        ${stop.id}
+                    </strong>
+
+                    <br>
+
+                    ${stop.fill_level}%
+                    •
+                    ${stop.priority}
+
+                </div>
+
+            `;
+
+
+            map.appendChild(node);
+
+
+            nodes.push({
+
+                element:
+                    node,
+
+                x:
+                    position[0],
+
+                y:
+                    position[1]
+
+            });
+
+        }
+    );
+
+
+
+    /* ==========================================
+       DRAW ROUTE LINES
+    ========================================== */
+
+    for (
+        let i = 0;
+        i < nodes.length - 1;
+        i++
+    ) {
+
+
+        const start =
+            nodes[i];
+
+
+        const end =
+            nodes[i + 1];
+
+
+        const line =
+            document.createElement(
+                "div"
+            );
+
+
+        line.className =
+            "route-line";
+
+
+        const mapWidth =
+            map.clientWidth;
+
+
+        const mapHeight =
+            map.clientHeight;
+
+
+        const x1 =
+            (start.x / 100) *
+            mapWidth + 27;
+
+
+        const y1 =
+            (start.y / 100) *
+            mapHeight + 27;
+
+
+        const x2 =
+            (end.x / 100) *
+            mapWidth + 27;
+
+
+        const y2 =
+            (end.y / 100) *
+            mapHeight + 27;
+
+
+        const dx =
+            x2 - x1;
+
+
+        const dy =
+            y2 - y1;
+
+
+        const distance =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+
+        const angle =
+            Math.atan2(
+                dy,
+                dx
+            ) *
+            180 /
+            Math.PI;
+
+
+        line.style.width =
+            distance +
+            "px";
+
+
+        line.style.left =
+            x1 +
+            "px";
+
+
+        line.style.top =
+            y1 +
+            "px";
+
+
+        line.style.transform =
+            `rotate(${angle}deg)`;
+
+
+        map.appendChild(
+            line
+        );
+
+    }
+
+}
+
+
+
+/* ==========================================
    MESSAGE
-===================================================== */
+========================================== */
 
 function showMessage(message) {
 
@@ -942,9 +1635,9 @@ function showMessage(message) {
 
 
 
-/* =====================================================
+/* ==========================================
    INITIAL LOAD
-===================================================== */
+========================================== */
 
 document.addEventListener(
     "DOMContentLoaded",
