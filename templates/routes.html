@@ -1,251 +1,206 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <title>
-        Smart Collection Routes
-    </title>
+    <title>Smart Collection Routes</title>
 
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='style.css') }}"
-    >
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 
     <style>
 
-        .route-summary {
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(4, 1fr);
-
-            gap: 18px;
-
+        .route-form {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 18px;
             margin-bottom: 25px;
-
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
         }
 
-        .route-stat {
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
 
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .form-group select {
+            padding: 13px;
+            border: 1px solid #dce3e8;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        .bin-selection {
+            margin-top: 20px;
+        }
+
+        .bin-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .bin-check {
+            border: 1px solid #dce3e8;
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            background: #fafafa;
+        }
+
+        .bin-check:hover {
+            border-color: #2d6a4f;
+        }
+
+        .bin-check input {
+            margin-right: 8px;
+        }
+
+        .create-btn {
+            margin-top: 20px;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 10px;
+            background: #173f2b;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .create-btn:hover {
+            opacity: 0.9;
+        }
+
+        .auto-btn {
+            padding: 13px 20px;
+            border-radius: 10px;
+            border: 1px solid #173f2b;
             background: white;
-
-            border-radius: 16px;
-
-            padding: 20px;
-
-            box-shadow:
-                0 5px 20px
-                rgba(0,0,0,0.06);
-
+            color: #173f2b;
+            font-weight: 600;
+            cursor: pointer;
         }
 
-        .route-stat span {
-
-            color: #718096;
-
-            font-size: 13px;
-
-        }
-
-        .route-stat h2 {
-
-            margin: 8px 0 0;
-
-            font-size: 28px;
-
+        .auto-btn:hover {
+            background: #173f2b;
+            color: white;
         }
 
         .route-list {
-
-            background: white;
-
-            border-radius: 18px;
-
-            padding: 20px;
-
-            box-shadow:
-                0 5px 20px
-                rgba(0,0,0,0.06);
-
+            margin-top: 20px;
         }
 
-        .route-item {
-
+        .route-stop {
             display: flex;
-
             align-items: center;
-
             gap: 20px;
-
-            padding: 20px 10px;
-
-            border-bottom:
-                1px solid #edf2f7;
-
+            padding: 18px 10px;
+            border-bottom: 1px solid #edf0f2;
         }
 
-        .route-item:last-child {
-
-            border-bottom: none;
-
-        }
-
-        .stop {
-
-            width: 55px;
-
-            height: 55px;
-
-            border-radius: 14px;
-
-            background: #edf7f2;
-
-            display: flex;
-
-            flex-direction: column;
-
-            justify-content: center;
-
-            align-items: center;
-
-            font-size: 12px;
-
-            font-weight: bold;
-
-            color: #718096;
-
-        }
-
-        .route-info {
-
-            flex: 1;
-
-        }
-
-        .route-info h3 {
-
-            margin: 0 0 6px;
-
-            font-size: 17px;
-
-        }
-
-        .route-info p {
-
-            margin: 0;
-
-            color: #718096;
-
-            font-size: 14px;
-
-        }
-
-        .route-priority {
-
-            font-weight: bold;
-
-            font-size: 13px;
-
-            min-width: 80px;
-
-            text-align: right;
-
-        }
-
-        .route-priority.high {
-
-            color: #e53e3e;
-
-        }
-
-        .route-priority.medium {
-
-            color: #dd8b00;
-
-        }
-
-        .route-priority.low {
-
-            color: #159447;
-
-        }
-
-        .generate-btn {
-
-            border: 1px solid #d9e2dc;
-
-            background: white;
-
-            padding: 12px 20px;
-
+        .stop-number {
+            width: 48px;
+            height: 48px;
             border-radius: 12px;
-
-            cursor: pointer;
-
-            font-size: 15px;
-
-            transition: 0.2s;
-
+            background: #eaf5ef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #173f2b;
         }
 
-        .generate-btn:hover {
-
-            background: #edf7f2;
-
+        .stop-details {
+            flex: 1;
         }
 
-        .generate-btn:disabled {
-
-            opacity: 0.6;
-
-            cursor: wait;
-
+        .stop-details strong {
+            font-size: 17px;
         }
 
-        .route-message {
-
-            text-align: center;
-
-            padding: 40px;
-
+        .stop-details p {
+            margin: 5px 0 0;
             color: #718096;
-
         }
 
-        @media(max-width: 900px) {
-
-            .route-summary {
-
-                grid-template-columns:
-                    repeat(2, 1fr);
-
-            }
-
+        .priority-high {
+            color: #dc2626;
+            font-weight: bold;
         }
 
-        @media(max-width: 600px) {
+        .priority-medium {
+            color: #d97706;
+            font-weight: bold;
+        }
 
-            .route-summary {
+        .priority-low {
+            color: #15803d;
+            font-weight: bold;
+        }
 
-                grid-template-columns:
-                    1fr;
+        .route-summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
 
+        .route-stat {
+            background: white;
+            padding: 22px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .route-stat span {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .route-stat h2 {
+            margin: 8px 0 0;
+            font-size: 28px;
+        }
+
+        .route-created {
+            background: #ecfdf5;
+            padding: 12px 15px;
+            border-radius: 10px;
+            color: #166534;
+            margin-top: 15px;
+            display: none;
+        }
+
+        @media(max-width:900px) {
+
+            .form-grid {
+                grid-template-columns: 1fr;
             }
 
-            .route-item {
+            .bin-checkboxes {
+                grid-template-columns: repeat(2, 1fr);
+            }
 
-                gap: 10px;
-
+            .route-summary {
+                grid-template-columns: repeat(2, 1fr);
             }
 
         }
@@ -257,12 +212,11 @@
 
 <body>
 
+
 <div class="app">
 
 
-    <!-- ========================= -->
     <!-- SIDEBAR -->
-    <!-- ========================= -->
 
     <aside class="sidebar">
 
@@ -274,13 +228,9 @@
 
             <div>
 
-                <h2>
-                    SmartWaste
-                </h2>
+                <h2>SmartWaste</h2>
 
-                <span>
-                    AI MANAGEMENT
-                </span>
+                <span>AI MANAGEMENT</span>
 
             </div>
 
@@ -293,22 +243,20 @@
                 📊 Dashboard
             </a>
 
-            <a href="/">
+            <a href="/#smartBins">
                 🗑️ Smart Bins
             </a>
 
-            <a href="/">
+            <a href="/#analytics">
                 📈 Analytics
             </a>
 
-            <a href="/">
+            <a href="/#collection">
                 🚛 Collection
             </a>
 
-            <a
-                href="/routes"
-                class="active"
-            >
+            <a href="/routes"
+               class="active">
                 📍 Routes
             </a>
 
@@ -317,14 +265,11 @@
 
         <div class="system">
 
-            <div class="online-dot">
-            </div>
+            <div class="online-dot"></div>
 
             <div>
 
-                <b>
-                    System Online
-                </b>
+                <b>System Online</b>
 
                 <small>
                     AI monitoring active
@@ -337,9 +282,8 @@
     </aside>
 
 
-    <!-- ========================= -->
+
     <!-- MAIN -->
-    <!-- ========================= -->
 
     <main class="main">
 
@@ -359,7 +303,7 @@
                 </h1>
 
                 <p class="subtitle">
-                    AI optimized route based on bin fill levels.
+                    AI optimized route planning for waste collection vehicles.
                 </p>
 
             </div>
@@ -368,17 +312,12 @@
             <div class="header-right">
 
                 <div class="live">
-
                     <span></span>
-
                     LIVE
-
                 </div>
 
                 <div class="date">
-
                     🤖 AI Route Engine
-
                 </div>
 
             </div>
@@ -386,14 +325,11 @@
         </header>
 
 
-        <!-- ========================= -->
-        <!-- ROUTE SUMMARY -->
-        <!-- ========================= -->
 
-        <section
-            class="route-summary"
-            id="routeSummary"
-        >
+        <!-- ROUTE SUMMARY -->
+
+        <section class="route-summary">
+
 
             <div class="route-stat">
 
@@ -449,12 +385,128 @@
         </section>
 
 
-        <!-- ========================= -->
-        <!-- ROUTE PANEL -->
-        <!-- ========================= -->
+
+        <!-- ================================================= -->
+        <!-- MANUAL ROUTE CREATION -->
+        <!-- ================================================= -->
+
+        <section class="route-form">
+
+            <h2>
+                🚛 Create Collection Route
+            </h2>
+
+            <p>
+                Select a vehicle and bins, or let AI automatically create the best route.
+            </p>
+
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Collection Vehicle
+                    </label>
+
+                    <select id="vehicle">
+
+                        <option value="TRUCK-01">
+                            🚛 TRUCK-01 — 5 Ton
+                        </option>
+
+                        <option value="TRUCK-02">
+                            🚛 TRUCK-02 — 7 Ton
+                        </option>
+
+                        <option value="TRUCK-03">
+                            🚛 TRUCK-03 — 10 Ton
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label>
+                        Route Mode
+                    </label>
+
+                    <select id="routeMode">
+
+                        <option value="manual">
+                            Manual Selection
+                        </option>
+
+                        <option value="automatic">
+                            AI Automatic Route
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- BIN SELECTION -->
+
+            <div class="bin-selection">
+
+                <label>
+                    <strong>
+                        Select Bins
+                    </strong>
+                </label>
+
+
+                <div class="bin-checkboxes"
+                     id="binCheckboxes">
+
+                    Loading bins...
+
+                </div>
+
+            </div>
+
+
+
+            <button class="create-btn"
+                    onclick="createRoute()">
+
+                🚛 Create Route
+
+            </button>
+
+
+            <button class="auto-btn"
+                    onclick="generateAutomaticRoute()">
+
+                🤖 Generate AI Route Automatically
+
+            </button>
+
+
+            <div id="createdMessage"
+                 class="route-created">
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- AI ROUTE -->
+        <!-- ================================================= -->
 
         <section class="panel">
-
 
             <div class="panel-header">
 
@@ -465,16 +517,14 @@
                     </h2>
 
                     <p>
-                        Suggested order for collection vehicle
+                        Optimized collection order based on bin priority
                     </p>
 
                 </div>
 
 
-                <button
-                    class="generate-btn"
-                    onclick="generateRoute()"
-                >
+                <button class="refresh"
+                        onclick="generateAutomaticRoute()">
 
                     ↻ Generate Route
 
@@ -483,20 +533,19 @@
             </div>
 
 
+
             <!-- ROUTE LIST -->
 
-            <div
-                class="route-list"
-                id="routeContainer"
-            >
+            <div id="routeList"
+                 class="route-list">
 
-                <div class="route-message">
+                <p style="text-align:center;padding:40px">
 
                     Click
                     <b>Generate Route</b>
                     to calculate the best collection order.
 
-                </div>
+                </p>
 
             </div>
 
@@ -504,9 +553,11 @@
         </section>
 
 
+
         <footer>
 
-            SmartWaste AI • Intelligent Waste Management System
+            SmartWaste AI •
+            Intelligent Waste Management System
 
         </footer>
 
@@ -516,251 +567,393 @@
 </div>
 
 
-<!-- ========================= -->
-<!-- JAVASCRIPT -->
-<!-- ========================= -->
 
 <script>
 
 
-async function generateRoute() {
+/* =====================================================
+   LOAD BINS
+===================================================== */
 
-
-    const button =
-        document.querySelector(
-            ".generate-btn"
-        );
-
-
-    const container =
-        document.getElementById(
-            "routeContainer"
-        );
-
-
-    button.innerText =
-        "⏳ Generating...";
-
-    button.disabled = true;
-
-
-    container.innerHTML = `
-
-        <div class="route-message">
-
-            🤖 AI is analyzing
-            bin fill levels...
-
-        </div>
-
-    `;
-
+async function loadBins() {
 
     try {
 
+        const response =
+            await fetch("/api/bins");
+
+        const bins =
+            await response.json();
+
+
+        const container =
+            document.getElementById(
+                "binCheckboxes"
+            );
+
+
+        container.innerHTML = "";
+
+
+        bins.forEach(function(bin) {
+
+            const div =
+                document.createElement("div");
+
+
+            div.className =
+                "bin-check";
+
+
+            div.innerHTML = `
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        value="${bin.id}"
+                    >
+
+                    <strong>
+                        ${bin.id}
+                    </strong>
+
+                    <br>
+
+                    <small>
+                        ${bin.location}
+                        •
+                        ${bin.fill_level}% full
+                    </small>
+
+                </label>
+
+            `;
+
+
+            container.appendChild(div);
+
+        });
+
+
+    }
+    catch(error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "binCheckboxes"
+        ).innerHTML =
+            "Unable to load bins.";
+
+    }
+
+}
+
+
+
+/* =====================================================
+   GENERATE AUTOMATIC ROUTE
+===================================================== */
+
+async function generateAutomaticRoute() {
+
+    try {
 
         const response =
             await fetch(
-                "/api/route"
+                "/api/routes/automatic"
             );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Route API failed"
-            );
-
-        }
 
 
         const data =
             await response.json();
 
 
-        if (!data.success) {
+        displayRoute(data);
 
-            throw new Error(
-                "Route generation failed"
+
+        showMessage(
+            "🤖 AI route generated automatically using current bin priority."
+        );
+
+
+    }
+    catch(error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to generate automatic route."
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   CREATE MANUAL ROUTE
+===================================================== */
+
+async function createRoute() {
+
+
+    const vehicle =
+        document.getElementById(
+            "vehicle"
+        ).value;
+
+
+    const selectedBins =
+        Array.from(
+            document.querySelectorAll(
+                "#binCheckboxes input:checked"
+            )
+        ).map(
+            checkbox =>
+                checkbox.value
+        );
+
+
+    if(selectedBins.length === 0) {
+
+        alert(
+            "Please select at least one bin."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/routes/create",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        vehicle:
+                            vehicle,
+
+                        bins:
+                            selectedBins
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        displayRoute(data);
+
+
+        showMessage(
+            "✅ Route created successfully for " +
+            vehicle
+        );
+
+
+    }
+    catch(error) {
+
+        console.error(error);
+
+        alert(
+            "Route creation failed."
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   DISPLAY ROUTE
+===================================================== */
+
+function displayRoute(data) {
+
+
+    document.getElementById(
+        "totalStops"
+    ).innerText =
+        data.total_stops;
+
+
+    document.getElementById(
+        "highPriority"
+    ).innerText =
+        data.high_priority;
+
+
+    document.getElementById(
+        "distance"
+    ).innerText =
+        data.distance +
+        " km";
+
+
+    document.getElementById(
+        "time"
+    ).innerText =
+        data.time +
+        " min";
+
+
+    const container =
+        document.getElementById(
+            "routeList"
+        );
+
+
+    container.innerHTML = "";
+
+
+    data.route.forEach(
+        function(stop, index) {
+
+
+            let priorityClass =
+                "priority-low";
+
+
+            if(
+                stop.priority ===
+                "HIGH"
+            ) {
+
+                priorityClass =
+                    "priority-high";
+
+            }
+            else if(
+                stop.priority ===
+                "MEDIUM"
+            ) {
+
+                priorityClass =
+                    "priority-medium";
+
+            }
+
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "route-stop";
+
+
+            div.innerHTML = `
+
+                <div class="stop-number">
+
+                    STOP ${index + 1}
+
+                </div>
+
+
+                <div class="stop-details">
+
+                    <strong>
+                        ${stop.id}
+                    </strong>
+
+                    <p>
+                        📍 ${stop.location}
+                        •
+                        ${stop.fill_level}% full
+                    </p>
+
+                </div>
+
+
+                <strong class="${priorityClass}">
+
+                    ${stop.priority}
+
+                </strong>
+
+            `;
+
+
+            container.appendChild(
+                div
             );
 
         }
-
-
-        // =========================
-        // UPDATE SUMMARY
-        // =========================
-
-        const summary =
-            data.summary;
-
-
-        document.getElementById(
-            "totalStops"
-        ).innerText =
-            summary.total_stops;
-
-
-        document.getElementById(
-            "highPriority"
-        ).innerText =
-            summary.high_priority;
-
-
-        document.getElementById(
-            "distance"
-        ).innerText =
-            summary.estimated_distance
-            + " km";
-
-
-        document.getElementById(
-            "time"
-        ).innerText =
-            summary.estimated_time
-            + " min";
-
-
-        // =========================
-        // DISPLAY ROUTE
-        // =========================
-
-        container.innerHTML = "";
-
-
-        data.route.forEach(
-            function(item) {
-
-
-                let priorityClass =
-                    "low";
-
-
-                if (
-                    item.priority ===
-                    "HIGH"
-                ) {
-
-                    priorityClass =
-                        "high";
-
-                }
-
-                else if (
-                    item.priority ===
-                    "MEDIUM"
-                ) {
-
-                    priorityClass =
-                        "medium";
-
-                }
-
-
-                const routeItem =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                routeItem.className =
-                    "route-item";
-
-
-                routeItem.innerHTML = `
-
-                    <div class="stop">
-
-                        STOP
-
-                        <strong>
-                            ${item.stop}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="route-info">
-
-                        <h3>
-                            ${item.id}
-                        </h3>
-
-                        <p>
-                            📍
-                            ${item.location}
-                            •
-                            ${item.fill_level}% full
-                        </p>
-
-                    </div>
-
-
-                    <div class="
-                        route-priority
-                        ${priorityClass}
-                    ">
-
-                        ${item.priority}
-
-                    </div>
-
-                `;
-
-
-                container.appendChild(
-                    routeItem
-                );
-
-            }
-        );
-
-
-        // =========================
-        // SUCCESS MESSAGE
-        // =========================
-
-        console.log(
-            "AI Route Generated:",
-            data
-        );
-
-
-    }
-
-    catch(error) {
-
-
-        console.error(
-            "Route Error:",
-            error
-        );
-
-
-        container.innerHTML = `
-
-            <div class="route-message">
-
-                ❌ Unable to generate route.
-
-                <br><br>
-
-                Please check the AI server.
-
-            </div>
-
-        `;
-
-    }
-
-
-    button.innerText =
-        "↻ Generate Route";
-
-    button.disabled =
-        false;
+    );
 
 }
+
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+function showMessage(message) {
+
+    const box =
+        document.getElementById(
+            "createdMessage"
+        );
+
+
+    box.innerText =
+        message;
+
+
+    box.style.display =
+        "block";
+
+
+    setTimeout(
+        function() {
+
+            box.style.display =
+                "none";
+
+        },
+        5000
+    );
+
+}
+
+
+
+/* =====================================================
+   INITIAL LOAD
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadBins();
+
+    }
+);
 
 
 </script>
