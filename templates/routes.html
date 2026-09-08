@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Smart Collection Routes
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        .route-summary {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+
+        }
+
+        .route-stat {
+
+            background: white;
+
+            border-radius: 16px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.06);
+
+        }
+
+        .route-stat span {
+
+            color: #718096;
+
+            font-size: 13px;
+
+        }
+
+        .route-stat h2 {
+
+            margin: 8px 0 0;
+
+            font-size: 28px;
+
+        }
+
+        .route-list {
+
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.06);
+
+        }
+
+        .route-item {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 20px;
+
+            padding: 20px 10px;
+
+            border-bottom:
+                1px solid #edf2f7;
+
+        }
+
+        .route-item:last-child {
+
+            border-bottom: none;
+
+        }
+
+        .stop {
+
+            width: 55px;
+
+            height: 55px;
+
+            border-radius: 14px;
+
+            background: #edf7f2;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            color: #718096;
+
+        }
+
+        .route-info {
+
+            flex: 1;
+
+        }
+
+        .route-info h3 {
+
+            margin: 0 0 6px;
+
+            font-size: 17px;
+
+        }
+
+        .route-info p {
+
+            margin: 0;
+
+            color: #718096;
+
+            font-size: 14px;
+
+        }
+
+        .route-priority {
+
+            font-weight: bold;
+
+            font-size: 13px;
+
+            min-width: 80px;
+
+            text-align: right;
+
+        }
+
+        .route-priority.high {
+
+            color: #e53e3e;
+
+        }
+
+        .route-priority.medium {
+
+            color: #dd8b00;
+
+        }
+
+        .route-priority.low {
+
+            color: #159447;
+
+        }
+
+        .generate-btn {
+
+            border: 1px solid #d9e2dc;
+
+            background: white;
+
+            padding: 12px 20px;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            transition: 0.2s;
+
+        }
+
+        .generate-btn:hover {
+
+            background: #edf7f2;
+
+        }
+
+        .generate-btn:disabled {
+
+            opacity: 0.6;
+
+            cursor: wait;
+
+        }
+
+        .route-message {
+
+            text-align: center;
+
+            padding: 40px;
+
+            color: #718096;
+
+        }
+
+        @media(max-width: 900px) {
+
+            .route-summary {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+        }
+
+        @media(max-width: 600px) {
+
+            .route-summary {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+            .route-item {
+
+                gap: 10px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- ========================= -->
+    <!-- SIDEBAR -->
+    <!-- ========================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                ♻
+            </div>
+
+            <div>
+
+                <h2>
+                    SmartWaste
+                </h2>
+
+                <span>
+                    AI MANAGEMENT
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav>
+
+            <a href="/">
+                📊 Dashboard
+            </a>
+
+            <a href="/">
+                🗑️ Smart Bins
+            </a>
+
+            <a href="/">
+                📈 Analytics
+            </a>
+
+            <a href="/">
+                🚛 Collection
+            </a>
+
+            <a
+                href="/routes"
+                class="active"
+            >
+                📍 Routes
+            </a>
+
+        </nav>
+
+
+        <div class="system">
+
+            <div class="online-dot">
+            </div>
+
+            <div>
+
+                <b>
+                    System Online
+                </b>
+
+                <small>
+                    AI monitoring active
+                </small>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ========================= -->
+    <!-- MAIN -->
+    <!-- ========================= -->
+
+    <main class="main">
+
+
+        <!-- HEADER -->
+
+        <header>
+
+            <div>
+
+                <p class="small-title">
+                    SMART CITY • WASTE MANAGEMENT
+                </p>
+
+                <h1>
+                    📍 Smart Collection Routes
+                </h1>
+
+                <p class="subtitle">
+                    AI optimized route based on bin fill levels.
+                </p>
+
+            </div>
+
+
+            <div class="header-right">
+
+                <div class="live">
+
+                    <span></span>
+
+                    LIVE
+
+                </div>
+
+                <div class="date">
+
+                    🤖 AI Route Engine
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ========================= -->
+        <!-- ROUTE SUMMARY -->
+        <!-- ========================= -->
+
+        <section
+            class="route-summary"
+            id="routeSummary"
+        >
+
+            <div class="route-stat">
+
+                <span>
+                    TOTAL STOPS
+                </span>
+
+                <h2 id="totalStops">
+                    --
+                </h2>
+
+            </div>
+
+
+            <div class="route-stat">
+
+                <span>
+                    HIGH PRIORITY
+                </span>
+
+                <h2 id="highPriority">
+                    --
+                </h2>
+
+            </div>
+
+
+            <div class="route-stat">
+
+                <span>
+                    ESTIMATED DISTANCE
+                </span>
+
+                <h2 id="distance">
+                    -- km
+                </h2>
+
+            </div>
+
+
+            <div class="route-stat">
+
+                <span>
+                    ESTIMATED TIME
+                </span>
+
+                <h2 id="time">
+                    -- min
+                </h2>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- ROUTE PANEL -->
+        <!-- ========================= -->
+
+        <section class="panel">
+
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        AI Collection Route
+                    </h2>
+
+                    <p>
+                        Suggested order for collection vehicle
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="generate-btn"
+                    onclick="generateRoute()"
+                >
+
+                    ↻ Generate Route
+
+                </button>
+
+            </div>
+
+
+            <!-- ROUTE LIST -->
+
+            <div
+                class="route-list"
+                id="routeContainer"
+            >
+
+                <div class="route-message">
+
+                    Click
+                    <b>Generate Route</b>
+                    to calculate the best collection order.
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <footer>
+
+            SmartWaste AI • Intelligent Waste Management System
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- JAVASCRIPT -->
+<!-- ========================= -->
+
+<script>
+
+
+async function generateRoute() {
+
+
+    const button =
+        document.querySelector(
+            ".generate-btn"
+        );
+
+
+    const container =
+        document.getElementById(
+            "routeContainer"
+        );
+
+
+    button.innerText =
+        "⏳ Generating...";
+
+    button.disabled = true;
+
+
+    container.innerHTML = `
+
+        <div class="route-message">
+
+            🤖 AI is analyzing
+            bin fill levels...
+
+        </div>
+
+    `;
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/api/route"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Route API failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            throw new Error(
+                "Route generation failed"
+            );
+
+        }
+
+
+        // =========================
+        // UPDATE SUMMARY
+        // =========================
+
+        const summary =
+            data.summary;
+
+
+        document.getElementById(
+            "totalStops"
+        ).innerText =
+            summary.total_stops;
+
+
+        document.getElementById(
+            "highPriority"
+        ).innerText =
+            summary.high_priority;
+
+
+        document.getElementById(
+            "distance"
+        ).innerText =
+            summary.estimated_distance
+            + " km";
+
+
+        document.getElementById(
+            "time"
+        ).innerText =
+            summary.estimated_time
+            + " min";
+
+
+        // =========================
+        // DISPLAY ROUTE
+        // =========================
+
+        container.innerHTML = "";
+
+
+        data.route.forEach(
+            function(item) {
+
+
+                let priorityClass =
+                    "low";
+
+
+                if (
+                    item.priority ===
+                    "HIGH"
+                ) {
+
+                    priorityClass =
+                        "high";
+
+                }
+
+                else if (
+                    item.priority ===
+                    "MEDIUM"
+                ) {
+
+                    priorityClass =
+                        "medium";
+
+                }
+
+
+                const routeItem =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                routeItem.className =
+                    "route-item";
+
+
+                routeItem.innerHTML = `
+
+                    <div class="stop">
+
+                        STOP
+
+                        <strong>
+                            ${item.stop}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="route-info">
+
+                        <h3>
+                            ${item.id}
+                        </h3>
+
+                        <p>
+                            📍
+                            ${item.location}
+                            •
+                            ${item.fill_level}% full
+                        </p>
+
+                    </div>
+
+
+                    <div class="
+                        route-priority
+                        ${priorityClass}
+                    ">
+
+                        ${item.priority}
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(
+                    routeItem
+                );
+
+            }
+        );
+
+
+        // =========================
+        // SUCCESS MESSAGE
+        // =========================
+
+        console.log(
+            "AI Route Generated:",
+            data
+        );
+
+
+    }
+
+    catch(error) {
+
+
+        console.error(
+            "Route Error:",
+            error
+        );
+
+
+        container.innerHTML = `
+
+            <div class="route-message">
+
+                ❌ Unable to generate route.
+
+                <br><br>
+
+                Please check the AI server.
+
+            </div>
+
+        `;
+
+    }
+
+
+    button.innerText =
+        "↻ Generate Route";
+
+    button.disabled =
+        false;
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
